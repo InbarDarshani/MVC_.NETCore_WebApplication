@@ -11,9 +11,9 @@ namespace RateTheRest.Models
     {
         public int RatingID { get; set; }
 
-        public float Value { get; set; }         //The calculated value of the restaurant's ratings 
+        public float Value { get; set; }            //The calculated value of the restaurant's ratings 
 
-        public int NumOfVotes { get; set; }     //The number of users who voted (Number of Users in the table below)
+        public int NumOfVotes { get; set; }         //The number of users who voted (Number of Users in the table below)
 
         //Linked fields from db
         [ForeignKey("Restaurant")]                  //The Rating is the dependant entity in the One-To-One relationship
