@@ -1,52 +1,98 @@
 ﻿@model RateTheRest.Models.Restaurant
+@using RateTheRest.Additional
 
 @{
     ViewData["Title"] = "Create";
+    var viewTags = (List<Tag>)ViewData["Tags"];
+    string[] week = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
 }
 
 <h1>Create</h1>
-
 <h4>Restaurant</h4>
+<script defer src="~/js/Restaurants.js"></script>  @*defer - run after DOM loads*@
+
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="None" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Logo" class="control-label"></label>
-                <input asp-for="Logo" class="form-control" />
-                <span asp-validation-for="Logo" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
+                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
+
+
             <div class="form-group">
                 <label asp-for="Location" class="control-label"></label>
-                <input asp-for="Location" class="form-control" />
-                <span asp-validation-for="Location" class="text-danger"></span>
+                <table class="table">
+                    <tr>
+                        <td>
+                            <label asp-for="Location.City" class="control-label" for="locationCity"></label>
+                            <input asp-for="Location.City" class="form-control" id="locationCity" />
+                            <span asp-validation-for="Location.City" class="text-danger"></span>
+                        </td>
+                        <td>
+                            <label asp-for="Location.Street" class="control-label" for="locationStreet"></label>
+                            <input asp-for="Location.Street" class="form-control" id="locationStreet" />
+                            <span asp-validation-for="Location.Street" class="text-danger"></span>
+                        </td>
+                        <td>
+                            <label asp-for="Location.Number" class="control-label" for="locationNumber"></label>
+                            <input asp-for="Location.Number" class="form-control" id="locationNumber" />
+                            <span asp-validation-for="Location.Number" class="text-danger"></span>
+                        </td>
+                    </tr>
+                </table>
             </div>
+
             <div class="form-group">
                 <label asp-for="OpeningHours" class="control-label"></label>
-                <input asp-for="OpeningHours" class="form-control" />
-                <span asp-validation-for="OpeningHours" class="text-danger"></span>
+                <table id="openingHours" class="table">
+                    @foreach (string day in week)
+                    {
+                        <tr>
+                            <td>
+                                <div class="openingHours-day">
+                                    <input name="days" type="checkbox" class="form-check-input" value="@Html.DisplayName(day)" />@Html.DisplayName(day):
+                                    <input name="from" type="time" /> - <input name="to" type="time" />
+                                    <span hidden class="openingHoursErrors text-danger"></span>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </table>
             </div>
+
             <div class="form-group">
-                <label asp-for="Category" class="control-label"></label>
-                <input asp-for="Category" class="form-control" />
-                <span asp-validation-for="Category" class="text-danger"></span>
+                <label asp-for="Tags" class="control-label"></label>
+                <select id="MultipleCheckboxes" name="tags" multiple>
+                    @foreach (Tag t in viewTags)
+                    {
+                        <option value="@t.TagID">@t.TagName</option>
+                    }
+                </select>
             </div>
+
             <div class="form-group">
                 <label asp-for="RatingID" class="control-label"></label>
                 <input asp-for="RatingID" class="form-control" />
                 <span asp-validation-for="RatingID" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label asp-for="Logo" class="control-label"></label>
+                <input name="logo" type="file" class="form-control-file" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Photos" class="control-label"></label>
+                <input type="file" multiple name="photos" class="form-control-file" />
+            </div>
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

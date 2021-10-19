@@ -5,6 +5,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using RateTheRest.Additional;
+using System.Web;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace RateTheRest.Models
 {
@@ -12,30 +18,34 @@ namespace RateTheRest.Models
     {
         public int RestaurantID { get; set; }
 
+        [Required]
         public string Name { get; set; }
 
-        public string? Logo { get; set; }               //Optional restaurant's logo image location
+        public string? Description { get; set; }
 
-        public string Description { get; set; }
-
-        public string Location { get; set; }
+        [ValidateNever]
+        public Location Location { get; set; }
 
         [Display(Name = "Opening Hours")]
-        public string OpeningHours { get; set; }
+        [ValidateNever]
+        public ICollection<DayHours>? OpeningHours { get; set; }
 
-        public string Category { get; set; }            //Fast Food, Italian, etc
+        [ValidateNever]
+        public List<Tag>? Tags { get; set; }                 //Vegan, Kosher, etc
 
-        public List<FilePath> Tags { get; set; }          //Vegan, Kosher, etc
+        [ValidateNever]
+        public ImageFile? Logo { get; set; }               //Restaurant's logo image paths
 
-        public List<FilePath> Photos { get; set; }        //Restaurant's images locations
+        [ValidateNever]
+        public List<ImageFile>? Photos { get; set; }         //Restaurant's images paths
 
         //Linked fields from db
-        public int RatingID { get; set; }
+        [Display(Name = "Rating Score")]
+        public int RatingID { get; set; }       
         public Rating Rating { get; set; }
 
         //Linked tables from db
         public ICollection<Chef> Chefs { get; set; }
         public ICollection<Review> Reviews { get; set; }
-
     }
 }
