@@ -6,8 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RateTheRest.Data;
+using RateTheRest.Models;
 
-namespace RateTheRest.Models
+namespace RateTheRest.Controllers
 {
     public class ChefsController : Controller
     {
@@ -53,7 +54,7 @@ namespace RateTheRest.Models
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ChefID,FirstName,LastName,Photo,Description,AvgRate")] Chef chef)
+        public async Task<IActionResult> Create([Bind("ChefID,FirstName,LastName,Description,AvgRate")] Chef chef)
         {
             if (ModelState.IsValid)
             {
@@ -85,7 +86,7 @@ namespace RateTheRest.Models
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ChefID,FirstName,LastName,Photo,Description,AvgRate")] Chef chef)
+        public async Task<IActionResult> Edit(int id, [Bind("ChefID,FirstName,LastName,Description,AvgRate")] Chef chef)
         {
             if (id != chef.ChefID)
             {

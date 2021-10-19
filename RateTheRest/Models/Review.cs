@@ -10,7 +10,7 @@ namespace RateTheRest.Models
     {
         public int ReviewID { get; set; }
 
-        public float Score { get; set; }           //An Individual rating score by this user
+        public float Score { get; set; }            //An Individual rating score by this user
 
         public string? text { get; set; }           //Optional description of the review
 

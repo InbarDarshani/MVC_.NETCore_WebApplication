@@ -21,6 +21,6 @@ namespace RateTheRest.Models
         public Restaurant Restaurant { get; set; }
 
         //Linked tables from db
-        public ICollection<User> User { get; set; }
+        public ICollection<User> User { get; set; }     //The Users who voted
     }
 }
