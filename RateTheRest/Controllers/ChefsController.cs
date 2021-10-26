@@ -1,135 +1,162 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using RateTheRest.Additional;
 using RateTheRest.Data;
 using RateTheRest.Models;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace RateTheRest.Controllers
 {
     public class ChefsController : Controller
     {
-        private readonly ApplicationContext _context;
+        private readonly ApplicationContext _dbcontext;       //Working with db
+        private IWebHostEnvironment _environment;             //Working with local project's directories 
 
-        public ChefsController(ApplicationContext context)
-        {
-            _context = context;
-        }
+        public ChefsController(ApplicationContext context) { _dbcontext = context; _environment = context.HostingEnvironment; }
+
+        //_____________________________________________Actions Functions___________________________________________________________________________________
 
         // GET: Chefs
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Chefs.ToListAsync());
+            return View(await _dbcontext.Chefs
+                .Include(c => c.Portrait)
+                .Include(c => c.Restaurants).ToListAsync());
         }
+        //_________________________________________________________
 
         // GET: Chefs/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var chef = await _context.Chefs
+            var chef = await _dbcontext.Chefs
+                .Include(c => c.Portrait)
+                .Include(c => c.Restaurants)
                 .FirstOrDefaultAsync(m => m.ChefID == id);
-            if (chef == null)
-            {
-                return NotFound();
-            }
+
+            if (chef == null) return NotFound();
 
             return View(chef);
         }
+        //_________________________________________________________
 
         // GET: Chefs/Create
         public IActionResult Create()
         {
+            ViewData["Restaurants"] = _dbcontext.Restaurants.ToList();
             return View();
         }
 
         // POST: Chefs/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ChefID,FirstName,LastName,Description,AvgRate")] Chef chef)
+        public async Task<IActionResult> Create(
+            [Bind(nameof(Chef.ChefID),
+            nameof(Chef.FirstName),
+            nameof(Chef.LastName),
+            nameof(Chef.Description))]
+            Chef chef,
+            IFormFile portrait,
+            List<int> restaurants)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(chef);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(chef);
+
+            //Upload and update portrait photo
+            chef.Portrait = UpdatePortrait(portrait);
+
+            //Update restaurants list (nullable)
+            if (restaurants.Count > 0)
+                chef.Restaurants = UpdateRestaurants(restaurants, chef.ChefID);
+
+            //Check binding and valudation
+            //if (!ModelState.IsValid) return View(chef);
+
+            _dbcontext.Add(chef);
+            await _dbcontext.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
+        //_________________________________________________________
 
         // GET: Chefs/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var chef = await _context.Chefs.FindAsync(id);
-            if (chef == null)
-            {
-                return NotFound();
-            }
+            var chef = await _dbcontext.Chefs
+                .Include(c => c.Portrait)
+                .Include(c => c.Restaurants)
+                .FirstOrDefaultAsync(m => m.ChefID == id);
+
+            if (chef == null) return NotFound();
+
+            ViewData["Restaurants"] = _dbcontext.Restaurants.ToList();
             return View(chef);
         }
 
         // POST: Chefs/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ChefID,FirstName,LastName,Description,AvgRate")] Chef chef)
+        public async Task<IActionResult> Edit(int id,
+            [Bind(nameof(Chef.ChefID),
+            nameof(Chef.FirstName),
+            nameof(Chef.LastName),
+            nameof(Chef.Description))]
+            Chef chef,
+            IFormFile portrait,
+            List<int> restaurants)
         {
-            if (id != chef.ChefID)
+            if (id != chef.ChefID) return NotFound();
+
+            chef = await _dbcontext.Chefs
+                .Include(c => c.Portrait)
+                .Include(c => c.Restaurants)
+                .FirstOrDefaultAsync(m => m.ChefID == id);
+
+            //Upload and update portrait photo (nullable)
+            if (portrait != null)
+                chef.Portrait = UpdatePortrait(portrait, chef.ChefID);
+
+            //Update restaurants list (nullable)
+            if (restaurants.Count > 0)
+                chef.Restaurants = UpdateRestaurants(restaurants, chef.ChefID);
+
+            try
             {
-                return NotFound();
+                _dbcontext.Update(chef);
+                await _dbcontext.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ChefExists(chef.ChefID))
+                    return NotFound();
+                else
+                    throw;
             }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(chef);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ChefExists(chef.ChefID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(chef);
+            //Check binding and valudation
+            //if (!ModelState.IsValid) return View(chef);
+
+            return RedirectToAction(nameof(Index));
         }
+        //_________________________________________________________
 
         // GET: Chefs/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var chef = await _context.Chefs
+            var chef = await _dbcontext.Chefs
+                .Include(c => c.Portrait)
+                .Include(c => c.Restaurants)
                 .FirstOrDefaultAsync(m => m.ChefID == id);
-            if (chef == null)
-            {
-                return NotFound();
-            }
+
+            if (chef == null) { return NotFound(); }
 
             return View(chef);
         }
@@ -139,15 +166,84 @@ namespace RateTheRest.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var chef = await _context.Chefs.FindAsync(id);
-            _context.Chefs.Remove(chef);
-            await _context.SaveChangesAsync();
+            var chef = await _dbcontext.Chefs
+                .Include(c => c.Portrait)
+                .Include(c => c.Restaurants)
+                .FirstOrDefaultAsync(m => m.ChefID == id);
+
+            //Delete Files from directory (nullable)
+            DeleteFiles(chef);
+
+            _dbcontext.Chefs.Remove(chef);
+            await _dbcontext.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        //_________________________________________________________________________________________________________________________________________________
 
+
+        //_____________________________________________Additional Functions___________________________________________________________________________________
         private bool ChefExists(int id)
         {
-            return _context.Chefs.Any(e => e.ChefID == id);
+            return _dbcontext.Chefs.Any(e => e.ChefID == id);
         }
+
+        //TOOD: delete also file from wwwroot\images\Chefs
+        public PortraitFile UpdatePortrait(IFormFile portrait, int chefID = -1)
+        {
+            string relativePath = Path.Combine("images", "Chefs");
+            string filename;
+            PortraitFile uploadedPortrait;
+
+            if (portrait == null)
+                return new PortraitFile();
+
+            //Delete existing logo from db if restaurant exists
+            if (ChefExists(chefID) && portrait != null)
+            {
+                List<IFormFile> remove = _dbcontext.Logos.Where(l => l.Restaurant.RestaurantID == chefID) as List<IFormFile>;
+                _dbcontext.Portraits.RemoveRange((IEnumerable<PortraitFile>)remove);
+            }
+
+            //Upload
+            filename = "_" + "Portrait" + "_" + DateTime.Now.ToString("d.M.yyyy_HH.mm.ss") + "_" + ".png";
+            using (FileStream stream = new FileStream(Path.Combine(_environment.WebRootPath, relativePath, filename), FileMode.Create))
+            {
+                portrait.CopyTo(stream);
+                uploadedPortrait = new PortraitFile { Path = Path.Combine("~/", relativePath, filename), FileName = filename };
+            }
+
+            return uploadedPortrait;
+        }
+
+        public ICollection<Restaurant> UpdateRestaurants(List<int> restaurantsIds, int chefID = -1)
+        {
+            var restaurants = new List<Restaurant>();
+
+            //Check if clear all required
+            if (restaurantsIds.First() == 0)
+                return null;
+
+            foreach (int rId in restaurantsIds)
+            {
+                var restaurant = _dbcontext.Restaurants.Find(rId);
+                restaurants.Add(restaurant);
+            }
+
+            return restaurants;
+        }
+
+        public void DeleteFiles(Chef chef)
+        {
+            string direcroty = Path.Combine(_environment.WebRootPath, "images", "Chefs");
+
+            if (chef.Portrait != null)
+            {
+                string portraitFile = Path.Combine(direcroty, chef.Portrait.FileName);
+                if (System.IO.File.Exists(portraitFile))
+                    System.IO.File.Delete(portraitFile);
+            }
+        }
+        //_________________________________________________________________________________________________________________________________________________
+
     }
 }

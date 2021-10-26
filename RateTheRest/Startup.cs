@@ -24,9 +24,9 @@ namespace RateTheRest
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
-            //Add this class to the default DB (location appears on appsettings.json)
-            services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+        {              
+            //Add this class to the default DB
+            services.AddDbContext<ApplicationContext>();
 
             //To be able to view exceptions on db
             services.AddDatabaseDeveloperPageExceptionFilter();
@@ -35,9 +35,9 @@ namespace RateTheRest
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment environment)
         {
-            if (env.IsDevelopment())
+            if (environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
@@ -46,7 +46,9 @@ namespace RateTheRest
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
+
             app.UseHttpsRedirection();
+
             app.UseStaticFiles();
 
             app.UseRouting();

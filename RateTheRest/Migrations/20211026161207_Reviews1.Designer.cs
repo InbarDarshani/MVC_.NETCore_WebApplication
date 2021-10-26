@@ -10,8 +10,8 @@ using RateTheRest.Data;
 namespace RateTheRest.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20211018203552_Restaurant1")]
-    partial class Restaurant1
+    [Migration("20211026161207_Reviews1")]
+    partial class Reviews1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -36,36 +36,6 @@ namespace RateTheRest.Migrations
                     b.ToTable("ChefRestaurant");
                 });
 
-            modelBuilder.Entity("RateTheRest.Additional.DayHours", b =>
-                {
-                    b.Property<int>("DayHoursID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("DayOfWeek")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("From")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("Open")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("RestaurantID")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("To")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("DayHoursID");
-
-                    b.HasIndex("RestaurantID");
-
-                    b.ToTable("DayHours");
-                });
-
             modelBuilder.Entity("RateTheRest.Additional.ImageFile", b =>
                 {
                     b.Property<int>("ImageFileID")
@@ -77,15 +47,11 @@ namespace RateTheRest.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImageType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Path")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("RestaurantID")
+                    b.Property<int>("RestaurantID")
                         .HasColumnType("int");
 
                     b.HasKey("ImageFileID");
@@ -98,27 +64,92 @@ namespace RateTheRest.Migrations
             modelBuilder.Entity("RateTheRest.Additional.Location", b =>
                 {
                     b.Property<int>("LocationId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
 
-                    b.Property<string>("CityName")
+                    b.Property<string>("City")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Description")
+                    b.Property<string>("Country")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("Latitude")
-                        .HasColumnType("float");
+                    b.Property<int>("Number")
+                        .HasColumnType("int");
 
-                    b.Property<double>("Longitude")
-                        .HasColumnType("float");
+                    b.Property<string>("Street")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("LocationId");
 
                     b.ToTable("Locations");
+                });
+
+            modelBuilder.Entity("RateTheRest.Additional.LogoFile", b =>
+                {
+                    b.Property<int>("LogoFileID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("LogoFileID");
+
+                    b.ToTable("Logos");
+                });
+
+            modelBuilder.Entity("RateTheRest.Additional.OpeningHours", b =>
+                {
+                    b.Property<int>("OpeningHoursID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("DayOfWeek")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("From")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("Open")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("RestaurantID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("To")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("OpeningHoursID");
+
+                    b.HasIndex("RestaurantID");
+
+                    b.ToTable("OpeningHours");
+                });
+
+            modelBuilder.Entity("RateTheRest.Additional.PortraitFile", b =>
+                {
+                    b.Property<int>("PortraitFileID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PortraitFileID");
+
+                    b.ToTable("Portraits");
                 });
 
             modelBuilder.Entity("RateTheRest.Additional.Tag", b =>
@@ -128,11 +159,16 @@ namespace RateTheRest.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("RestaurantID")
+                        .HasColumnType("int");
+
                     b.Property<string>("TagName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("TagID");
+
+                    b.HasIndex("RestaurantID");
 
                     b.ToTable("Tags");
                 });
@@ -144,11 +180,10 @@ namespace RateTheRest.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<float>("AvgRate")
+                    b.Property<float?>("AvgRate")
                         .HasColumnType("real");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
@@ -159,12 +194,13 @@ namespace RateTheRest.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("PhotoImageFileID")
+                    b.Property<int?>("NumberOfRestaurants")
                         .HasColumnType("int");
 
-                    b.HasKey("ChefID");
+                    b.Property<float?>("SumOfRatings")
+                        .HasColumnType("real");
 
-                    b.HasIndex("PhotoImageFileID");
+                    b.HasKey("ChefID");
 
                     b.ToTable("Chefs");
                 });
@@ -172,23 +208,18 @@ namespace RateTheRest.Migrations
             modelBuilder.Entity("RateTheRest.Models.Rating", b =>
                 {
                     b.Property<int>("RatingID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
 
                     b.Property<int>("NumOfVotes")
                         .HasColumnType("int");
 
-                    b.Property<int>("RestaurantID")
+                    b.Property<int>("SumOfVotes")
                         .HasColumnType("int");
 
                     b.Property<float>("Value")
                         .HasColumnType("real");
 
                     b.HasKey("RatingID");
-
-                    b.HasIndex("RestaurantID")
-                        .IsUnique();
 
                     b.ToTable("Ratings");
                 });
@@ -203,24 +234,11 @@ namespace RateTheRest.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("LocationId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("LogoImageFileID")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RatingID")
-                        .HasColumnType("int");
-
                     b.HasKey("RestaurantID");
-
-                    b.HasIndex("LocationId");
-
-                    b.HasIndex("LogoImageFileID");
 
                     b.ToTable("Restaurants");
                 });
@@ -235,23 +253,23 @@ namespace RateTheRest.Migrations
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("RestaurantID")
+                    b.Property<int>("RestaurantID")
                         .HasColumnType("int");
 
-                    b.Property<float>("Score")
-                        .HasColumnType("real");
-
-                    b.Property<int>("UserID")
+                    b.Property<int>("Score")
                         .HasColumnType("int");
 
-                    b.Property<string>("text")
+                    b.Property<string>("Text")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("ReviewID");
 
                     b.HasIndex("RestaurantID");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Reviews");
                 });
@@ -293,21 +311,6 @@ namespace RateTheRest.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("RestaurantTag", b =>
-                {
-                    b.Property<int>("RestaurantsRestaurantID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TagsTagID")
-                        .HasColumnType("int");
-
-                    b.HasKey("RestaurantsRestaurantID", "TagsTagID");
-
-                    b.HasIndex("TagsTagID");
-
-                    b.ToTable("RestaurantTag");
-                });
-
             modelBuilder.Entity("ChefRestaurant", b =>
                 {
                     b.HasOne("RateTheRest.Models.Chef", null)
@@ -323,90 +326,114 @@ namespace RateTheRest.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("RateTheRest.Additional.DayHours", b =>
-                {
-                    b.HasOne("RateTheRest.Models.Restaurant", null)
-                        .WithMany("OpeningHours")
-                        .HasForeignKey("RestaurantID");
-                });
-
             modelBuilder.Entity("RateTheRest.Additional.ImageFile", b =>
                 {
-                    b.HasOne("RateTheRest.Models.Restaurant", null)
-                        .WithMany("Photos")
-                        .HasForeignKey("RestaurantID");
-                });
-
-            modelBuilder.Entity("RateTheRest.Models.Chef", b =>
-                {
-                    b.HasOne("RateTheRest.Additional.ImageFile", "Photo")
-                        .WithMany()
-                        .HasForeignKey("PhotoImageFileID");
-
-                    b.Navigation("Photo");
-                });
-
-            modelBuilder.Entity("RateTheRest.Models.Rating", b =>
-                {
                     b.HasOne("RateTheRest.Models.Restaurant", "Restaurant")
-                        .WithOne("Rating")
-                        .HasForeignKey("RateTheRest.Models.Rating", "RestaurantID")
+                        .WithMany("Photos")
+                        .HasForeignKey("RestaurantID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Restaurant");
                 });
 
-            modelBuilder.Entity("RateTheRest.Models.Restaurant", b =>
+            modelBuilder.Entity("RateTheRest.Additional.Location", b =>
                 {
-                    b.HasOne("RateTheRest.Additional.Location", "Location")
-                        .WithMany()
-                        .HasForeignKey("LocationId");
+                    b.HasOne("RateTheRest.Models.Restaurant", "Restaurant")
+                        .WithOne("Location")
+                        .HasForeignKey("RateTheRest.Additional.Location", "LocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("RateTheRest.Additional.ImageFile", "Logo")
-                        .WithMany()
-                        .HasForeignKey("LogoImageFileID");
+                    b.Navigation("Restaurant");
+                });
 
-                    b.Navigation("Location");
+            modelBuilder.Entity("RateTheRest.Additional.LogoFile", b =>
+                {
+                    b.HasOne("RateTheRest.Models.Restaurant", "Restaurant")
+                        .WithOne("Logo")
+                        .HasForeignKey("RateTheRest.Additional.LogoFile", "LogoFileID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("Logo");
+                    b.Navigation("Restaurant");
+                });
+
+            modelBuilder.Entity("RateTheRest.Additional.OpeningHours", b =>
+                {
+                    b.HasOne("RateTheRest.Models.Restaurant", "Restaurant")
+                        .WithMany("OpeningHours")
+                        .HasForeignKey("RestaurantID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Restaurant");
+                });
+
+            modelBuilder.Entity("RateTheRest.Additional.PortraitFile", b =>
+                {
+                    b.HasOne("RateTheRest.Models.Chef", "Chef")
+                        .WithOne("Portrait")
+                        .HasForeignKey("RateTheRest.Additional.PortraitFile", "PortraitFileID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Chef");
+                });
+
+            modelBuilder.Entity("RateTheRest.Additional.Tag", b =>
+                {
+                    b.HasOne("RateTheRest.Models.Restaurant", "Restaurant")
+                        .WithMany("Tags")
+                        .HasForeignKey("RestaurantID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Restaurant");
+                });
+
+            modelBuilder.Entity("RateTheRest.Models.Rating", b =>
+                {
+                    b.HasOne("RateTheRest.Models.Restaurant", "Restaurant")
+                        .WithOne("Rating")
+                        .HasForeignKey("RateTheRest.Models.Rating", "RatingID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Restaurant");
                 });
 
             modelBuilder.Entity("RateTheRest.Models.Review", b =>
                 {
-                    b.HasOne("RateTheRest.Models.Restaurant", null)
+                    b.HasOne("RateTheRest.Models.Restaurant", "Restaurant")
                         .WithMany("Reviews")
-                        .HasForeignKey("RestaurantID");
-
-                    b.HasOne("RateTheRest.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserID")
+                        .HasForeignKey("RestaurantID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("RateTheRest.Models.User", "User")
+                        .WithMany("Reviews")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Restaurant");
 
                     b.Navigation("User");
                 });
 
             modelBuilder.Entity("RateTheRest.Models.User", b =>
                 {
-                    b.HasOne("RateTheRest.Models.Rating", null)
+                    b.HasOne("RateTheRest.Models.Rating", "Rating")
                         .WithMany("User")
                         .HasForeignKey("RatingID");
+
+                    b.Navigation("Rating");
                 });
 
-            modelBuilder.Entity("RestaurantTag", b =>
+            modelBuilder.Entity("RateTheRest.Models.Chef", b =>
                 {
-                    b.HasOne("RateTheRest.Models.Restaurant", null)
-                        .WithMany()
-                        .HasForeignKey("RestaurantsRestaurantID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RateTheRest.Additional.Tag", null)
-                        .WithMany()
-                        .HasForeignKey("TagsTagID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Portrait");
                 });
 
             modelBuilder.Entity("RateTheRest.Models.Rating", b =>
@@ -416,13 +443,24 @@ namespace RateTheRest.Migrations
 
             modelBuilder.Entity("RateTheRest.Models.Restaurant", b =>
                 {
+                    b.Navigation("Location")
+                        .IsRequired();
+
+                    b.Navigation("Logo");
+
                     b.Navigation("OpeningHours");
 
                     b.Navigation("Photos");
 
-                    b.Navigation("Rating")
-                        .IsRequired();
+                    b.Navigation("Rating");
 
+                    b.Navigation("Reviews");
+
+                    b.Navigation("Tags");
+                });
+
+            modelBuilder.Entity("RateTheRest.Models.User", b =>
+                {
                     b.Navigation("Reviews");
                 });
 #pragma warning restore 612, 618

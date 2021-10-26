@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -6,6 +7,11 @@ using System.Threading.Tasks;
 
 namespace RateTheRest.Models
 {
+    public static class GlobalUserRoles
+    {
+        public static readonly string[] ROLES = { "Admin", "Basic" };
+    }
+
     public class User
     {
         public int UserId { get; set; }
@@ -22,6 +28,14 @@ namespace RateTheRest.Models
         [Display(Name = "Last Name")]
         public string LastName { get; set; } 
         
-        public string Role { get; set; }        //Admin, Editor, Viewer
+        public string Role { get; set; }
+
+        //Linked tables from db
+
+        [ValidateNever]
+        public ICollection<Review>? Reviews { get; set; }                  //One(User)-to-Many(Review)
+
+        [ValidateNever]
+        public Rating? Rating { get; set; }                              //One(Rating)-to-Many(Users)
     }
 }

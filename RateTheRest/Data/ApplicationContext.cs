@@ -12,18 +12,23 @@ namespace RateTheRest.Data
 {
     public class ApplicationContext : DbContext
     {
-        public readonly IWebHostEnvironment env;
+        public readonly IWebHostEnvironment HostingEnvironment;
         public IConfigurationRoot Configuration { get; set; }
 
-        public ApplicationContext(IWebHostEnvironment env) : base()
+        //public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
+        //{
+        //}
+
+        public ApplicationContext(IWebHostEnvironment environment) : base()
         {
-            this.env = env;
+            this.HostingEnvironment = environment;
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            //Setup and Build a custom DbContexOptions in order to specify local hosting environment
             var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
+                .SetBasePath(HostingEnvironment.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
             Configuration = builder.Build();
             optionsBuilder.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
@@ -35,7 +40,10 @@ namespace RateTheRest.Data
         public DbSet<Rating> Ratings { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Tag> Tags { get; set; }
+        public DbSet<LogoFile> Logos { get; set; }
         public DbSet<ImageFile> Images { get; set; }
+        public DbSet<PortraitFile> Portraits { get; set; }
         public DbSet<Location> Locations { get; set; }
+        public DbSet<OpeningHours> OpeningHours { get; set; }
     }
 }
