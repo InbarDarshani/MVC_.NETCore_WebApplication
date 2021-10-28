@@ -24,10 +24,9 @@ namespace RateTheRest.Models
         
         public string? Description { get; set; }
 
+        [Display(Name = "Average Rating Of Restaurants")]
         public float? AvgRate { get; set; }                                //The chef's restaurants average rating score          
-        public int? NumberOfRestaurants { get; set; }
-        public float? SumOfRatings { get; set; }
-        
+
         //Linked tables from db
 
         [ValidateNever]

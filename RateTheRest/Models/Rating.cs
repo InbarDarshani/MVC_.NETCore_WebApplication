@@ -23,6 +23,6 @@ namespace RateTheRest.Models
 
         public virtual Restaurant Restaurant { get; set; }                                  //One(Restaurant)-to-One(Rating)
         
-        public ICollection<User> User { get; set; }         //The Users who voted          //One(Rating)-to-Many(Users)
+        public ICollection<ApplicationUser> User { get; set; }         //The Users who voted          //One(Rating)-to-Many(Users)
     }
 }

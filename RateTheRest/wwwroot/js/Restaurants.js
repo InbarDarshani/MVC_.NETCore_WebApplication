@@ -66,17 +66,18 @@ $(document).ready(function () {
     //Create a review button
     $("#createReview").click(function () {
         $.ajax({
-            url: "/Reviews/Create",
+            url: "/Reviews/CreatePartial",
             method: "GET",
             contentType: "application/json; charset=utf-8",
 
             success: function (result) {
                 $("#createReview-div").html(result);
-                document.querySelector("#reviewRestaurantID").value = document.querySelector("#createReview-div").getAttribute("value")
+                //$("#reviewRestaurantID")[0].value = $("#createReview-div")[0].getAttribute.("value");
+                document.querySelector("#reviewRestaurantId").value = document.querySelector("#createReview-div").getAttribute("value");
             },
 
             error: function (err) {
-                alert('Failed to get review creation' + err)
+                alert('Failed to get review creation' + err);
             }
         })
     });

@@ -9,6 +9,8 @@ using RateTheRest.Data;
 using RateTheRest.Models;
 using RateTheRest.Additional;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace RateTheRest.Controllers
 {
@@ -20,15 +22,7 @@ namespace RateTheRest.Controllers
 
         //_____________________________________________Actions Functions___________________________________________________________________________________
 
-        // GET: Reviews
-        public async Task<IActionResult> Index()
-        {
-            return View(await _dbcontext.Reviews
-                    .Include(r => r.Restaurant)
-                    .Include(r => r.User)
-                    .ToListAsync());
-        }
-
+        //Partial View! - Show the Review in Restaurant Details page
         // GET: Reviews/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -39,27 +33,33 @@ namespace RateTheRest.Controllers
                     .Include(r => r.User)
                     .AsNoTracking()
                     .FirstOrDefaultAsync(m => m.ReviewID == id);
-            
+
             if (review == null) return NotFound();
 
-            return View(review);
+            return PartialView("DetailsPartial");
         }
         //_________________________________________________________
 
         //Partial View! - Create a Review in Restaurant Details page
-        // GET: Reviews/Create
-        public IActionResult Create()
+        // GET: Reviews/CreatePartial
+        //[Authorize] - Manually
+        public IActionResult CreatePartial()
         {
-            return View();
+            if (!User.Identity.IsAuthenticated)
+                return PartialView("_AuthenticationRequiredPartial");
+
+            return PartialView("CreatePartial");
         }
+
         // POST: Reviews/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind(nameof(Review.ReviewID),nameof(Review.Score),nameof(Review.Text))] Review review, int restaurantId)
+        [Authorize]
+        public async Task<IActionResult> Create([Bind(nameof(Review.ReviewID), nameof(Review.Score), nameof(Review.Text))] Review review, int restaurantId)
         {
             review.DateCreated = DateTime.Now;
             review.Restaurant = _dbcontext.Restaurants.Find(restaurantId);
-            review.User = _dbcontext.Users.Find(1);
+            review.User = _dbcontext.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
 
             _dbcontext.Add(review);
             await _dbcontext.SaveChangesAsync();
@@ -68,50 +68,117 @@ namespace RateTheRest.Controllers
         }
         //_________________________________________________________
 
-        // GET: Reviews/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            return View();
-        }
-
-        // POST: Reviews/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind(nameof(Review.ReviewID), nameof(Review.Score), nameof(Review.Text))] Review review)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-        //_________________________________________________________
-
+        //Partial View! - Create a Review in Restaurant Details page
         // GET: Reviews/Delete/5
+        //[Authorize] - Manually
         public async Task<IActionResult> Delete(int? id)
         {
-            return View();
+            if (!User.Identity.IsAuthenticated)
+                return PartialView("_AuthenticationRequiredPartial");
+
+            return PartialView("CreatePartial");
         }
 
         // POST: Reviews/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        //[Authorize] - Manually authorize current user
+        public async Task<IActionResult> DeleteConfirmed(int id, int restaurantId)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            if (User.Identity.Name != _dbcontext.Reviews.Find(id).User.UserName)
+                return PartialView("_AccessDeniedPartial");
+
+            var review = await _dbcontext.Reviews
+                .Include(r => r.Restaurant)
+                .Include(r => r.User)
+                .FirstOrDefaultAsync(m => m.ReviewID == id);
+
+            return RedirectToAction("Details", "Restaurants", new { id = restaurantId });
         }
+
+
+
+
+
+
+
+
+
+        //_________________________________NOT IN USE__________________________________________________________________
+        // GET: Reviews
+        //public async Task<IActionResult> Index()
+        //{
+        //    return View(await _dbcontext.Reviews
+        //            .Include(r => r.Restaurant)
+        //            .Include(r => r.User)
+        //            .ToListAsync());
+        //}
+
+        //// GET: Reviews/Details/5
+        //public async Task<IActionResult> Details(int? id)
+        //{
+        //    if (id == null) return NotFound();
+
+        //    var review = await _dbcontext.Reviews
+        //            .Include(r => r.Restaurant)
+        //            .Include(r => r.User)
+        //            .AsNoTracking()
+        //            .FirstOrDefaultAsync(m => m.ReviewID == id);
+
+        //    if (review == null) return NotFound();
+
+        //    return View(review);
+        //}
+
+        // GET: Reviews/Create
+        //[Authorize]
+        //public IActionResult Create()
+        //{
+        //    //ViewData["restaurantId"] = _restaurant.RestaurantID;
+        //    return View();
+        //}
+        //// GET: Reviews/Edit/5
+        //public async Task<IActionResult> Edit(int? id)
+        //{
+        //    return View();
+        //}
+
+        //// POST: Reviews/Edit/5
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Edit(int id, [Bind(nameof(Review.ReviewID), nameof(Review.Score), nameof(Review.Text))] Review review)
+        //{
+        //    try
+        //    {
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    catch
+        //    {
+        //        return View();
+        //    }
+        //}
         //_________________________________________________________
 
+        // GET: Reviews/Delete/5
+        //public async Task<IActionResult> Delete(int? id)
+        //{
+        //    return View();
+        //}
 
+        //// POST: Reviews/Delete/5
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> DeleteConfirmed(int id)
+        //{
+        //    try
+        //    {
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    catch
+        //    {
+        //        return View();
+        //    }
+        //}
+        //_________________________________________________________
     }
 }

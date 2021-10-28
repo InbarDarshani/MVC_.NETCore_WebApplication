@@ -7,7 +7,7 @@
       "sslPort": 0
     },
     "iisExpress": {
-      "applicationUrl": "http://localhost:47704",
+      "applicationUrl": "https://localhost:44371/",
       "sslPort": 44371
     }
   },
@@ -20,7 +20,7 @@
       }
     },
     "RateTheRest": {
-      "commandName": "IISExpress",
+      "commandName": "IIS",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

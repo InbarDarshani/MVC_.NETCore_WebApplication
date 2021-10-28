@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -25,6 +26,6 @@ namespace RateTheRest.Models
 
         public Restaurant Restaurant { get; set; }               //One(Restaurant)-to-Many(Reviews)
 
-        public User User { get; set; }                          //One(User)-to-Many(Reviews)
+        public ApplicationUser User { get; set; }                          
     }
 }

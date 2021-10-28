@@ -14,6 +14,7 @@ using System.IO;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Globalization;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 
 namespace RateTheRest.Controllers
 {
@@ -65,6 +66,7 @@ namespace RateTheRest.Controllers
         //_________________________________________________________
 
         // GET: Restaurants/Create
+        [Authorize(Policy = "RequireAdmin")]
         public IActionResult Create()
         {
             ViewData["Chefs"] = _dbcontext.Chefs.ToList();
@@ -126,6 +128,7 @@ namespace RateTheRest.Controllers
         //_________________________________________________________
 
         // GET: Restaurants/Edit/5
+        [Authorize(Policy = "RequireAdmin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
@@ -224,6 +227,7 @@ namespace RateTheRest.Controllers
         //_________________________________________________________
 
         // GET: Restaurants/Delete/5
+        [Authorize(Policy = "RequireAdmin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();

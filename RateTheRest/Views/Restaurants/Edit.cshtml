@@ -8,6 +8,7 @@
 <h1>Edit</h1>
 <h4>Restaurant</h4>
 <script defer src="~/js/Restaurants.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>
 
 <hr />
 <div class="row">
@@ -65,8 +66,8 @@
                                 <div class="openingHours-day">
                                     <input name="days" type="checkbox" class="form-check-input" checked="@day.Open" value="@day.DayOfWeek" />@day.DayOfWeek:
                                     <input name="from" type="time" value="@day.From.GetValueOrDefault().ToString("HH:mm")" /> - <input name="to" type="time" value="@day.To.GetValueOrDefault().ToString("HH:mm")" />
-                                    <span hidden class="openingHoursErrors text-danger"></span>
                                 </div>
+                                <span hidden class="openingHoursErrors text-danger"></span>
                             </td>
                         </tr>
                     }

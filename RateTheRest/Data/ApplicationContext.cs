@@ -7,10 +7,12 @@ using RateTheRest.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using RateTheRest.Additional;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace RateTheRest.Data
 {
-    public class ApplicationContext : DbContext
+    public class ApplicationContext : IdentityDbContext<ApplicationUser>
     {
         public readonly IWebHostEnvironment HostingEnvironment;
         public IConfigurationRoot Configuration { get; set; }
@@ -38,7 +40,6 @@ namespace RateTheRest.Data
         public DbSet<Chef> Chefs { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Rating> Ratings { get; set; }
-        public DbSet<User> Users { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<LogoFile> Logos { get; set; }
         public DbSet<ImageFile> Images { get; set; }

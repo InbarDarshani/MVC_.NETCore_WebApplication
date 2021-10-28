@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -48,6 +49,7 @@ namespace RateTheRest.Controllers
         //_________________________________________________________
 
         // GET: Chefs/Create
+        [Authorize(Policy = "RequireAdmin")]
         public IActionResult Create()
         {
             ViewData["Restaurants"] = _dbcontext.Restaurants.ToList();
@@ -84,6 +86,7 @@ namespace RateTheRest.Controllers
         //_________________________________________________________
 
         // GET: Chefs/Edit/5
+        [Authorize(Policy = "RequireAdmin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();

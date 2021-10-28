@@ -6,9 +6,7 @@
 
 <h1>Details</h1>
 <script defer src="~/js/Restaurants.js"></script>
-@*<head>
-        <link rel="stylesheet" href="~/css/Restaurants.css">
-    </head>*@
+
 <div>
     <h4>Restaurant</h4>
     <hr />
@@ -138,11 +136,11 @@
                     </tr>
                     @foreach (Review r in Model.Reviews)
                     {
-                    <tr>
-                        <td>@r.Score</td>
-                        <td>@r.Text</td>
-                        <td>@r.User.FirstName @r.User.LastName</td>
-                    </tr>
+                        <tr>
+                            <td>@r.Score</td>
+                            <td>@r.Text</td>
+                            <td>@r.User.FirstName @r.User.LastName</td>
+                        </tr>
                     }
                 </table>
             </dd>
