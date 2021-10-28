@@ -19,47 +19,80 @@
                 @Html.DisplayNameFor(model => model.Logo)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+                @Html.DisplayNameFor(model => model.Location)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Location)
+                @Html.DisplayNameFor(model => model.Tags)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.OpeningHours)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.RatingID)
+                @Html.DisplayNameFor(model => model.Rating)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Logo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Location)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.OpeningHours)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RatingID)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.RestaurantID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.RestaurantID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.RestaurantID">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @if (item.Logo != null)
+                    {
+                        <img src="@Url.Content(item.Logo.Path)" alt="Logo" class="img-thumbnail" width="100" height="100">
+                    }
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Location.Number) 
+                    @Html.DisplayFor(modelItem => item.Location.Street)  st, 
+                    @Html.DisplayFor(modelItem => item.Location.City), 
+                    @Html.DisplayFor(modelItem => item.Location.Country)
+                </td>
+
+                <td>
+                    @if (item.Tags != null && item.Tags.Count > 0)
+                    {
+                        <ul>
+                            @foreach (Tag t in item.Tags)
+                            {
+                                <li> @t.TagName </li>
+                            }
+                        </ul>
+                    }
+                </td>
+
+                <td>
+                    @if (item.OpeningHours != null && item.OpeningHours.Count > 0)
+                    {
+                        <ul>
+                            @foreach (OpeningHours day in item.OpeningHours)
+                            {
+                                @if (day.Open)
+                                {
+                                    <li>
+                                        @day.DayOfWeek: @day.From.GetValueOrDefault().ToString("HH:mm")-@day.To.GetValueOrDefault().ToString("HH:mm")
+                                    </li>
+                                }
+                            }
+                        </ul>
+                    }
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Rating)
+                </td>
+
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.RestaurantID">Details</a> |
+                    <a asp-action="Edit" asp-route-id="@item.RestaurantID">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@item.RestaurantID">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

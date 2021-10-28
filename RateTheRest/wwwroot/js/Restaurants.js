@@ -1,7 +1,6 @@
 ﻿
-//Opening Hours
+//Opening Hours checkboxes and validation
 const days = document.querySelectorAll("#openingHours .openingHours-day");
-
 for (let d of days) {
     const checkbox = d.querySelector("[type='checkbox']");
     const from = d.querySelector("[name='from']");
@@ -9,9 +8,10 @@ for (let d of days) {
     const day = d.querySelector("[name='days']");
 
     //Initial states
-    checkbox.checked = false;
-    from.disabled = true;
-    to.disabled = true;
+    if (!checkbox.checked) {
+        from.disabled = true;
+        to.disabled = true;
+    }
 
     //Treat checkbox change
     checkbox.addEventListener('change', function () {
@@ -22,6 +22,7 @@ for (let d of days) {
             d.querySelector(".openingHoursErrors").hidden = true;
     });
 
+    //Treat time range
     from.addEventListener('blur', validateTimeRange);
     to.addEventListener('blur', validateTimeRange);
     function validateTimeRange() {
@@ -36,14 +37,48 @@ for (let d of days) {
 }
 function timeToValue(str) { return parseInt(str.split(":")[0]) * 60 + parseInt(str.split(":")[1]) }
 
-//Tags multiple selection style
+//Tags multiple selection
 $(function () {
-    $('#MultipleCheckboxes').multiselect({
+    $(".MultipleCheckboxes[name='tags']").multiselect({
         enableClickableOptGroups: true,
         includeSelectAllOption: true,
         nonSelectedText: 'Select'
     });
 });
 
+//Chefs multiple selection
+$(function () {
+    $(".MultipleCheckboxes[name='chefs']").multiselect({
+        enableClickableOptGroups: true,
+        includeSelectAllOption: false,
+        allSelectedText: null,
+        nonSelectedText: 'Select',
+        enableFiltering: true,
+        filterBehavior: 'text',
+        filterPlaceholder: 'Search',
+        includeFilterClearBtn: false,
+        buttonWidth: 'auto'
+    });
+});
 
 
+$(document).ready(function () {
+    //Create a review button
+    $("#createReview").click(function () {
+        $.ajax({
+            url: "/Reviews/CreatePartial",
+            method: "GET",
+            contentType: "application/json; charset=utf-8",
+
+            success: function (result) {
+                $("#createReview-div").html(result);
+                //$("#reviewRestaurantID")[0].value = $("#createReview-div")[0].getAttribute.("value");
+                document.querySelector("#reviewRestaurantId").value = document.querySelector("#createReview-div").getAttribute("value");
+            },
+
+            error: function (err) {
+                alert('Failed to get review creation' + err);
+            }
+        })
+    });
+});

@@ -10,6 +10,8 @@ namespace RateTheRest.Models
 {
     public class Chef
     {
+        public Chef() { this.Restaurants = new HashSet<Restaurant>(); }     //For the Many to Many Relation
+
         public int ChefID { get; set; }
 
         [Required]
@@ -20,15 +22,17 @@ namespace RateTheRest.Models
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
         
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
-        public float AvgRate { get; set; }              //The chef's restaurants average rating score
-
-        [Required]
-        [ValidateNever]
-        public ImageFile? Photo { get; set; }               //Chef's image location
+        [Display(Name = "Average Rating Of Restaurants")]
+        public float? AvgRate { get; set; }                                //The chef's restaurants average rating score          
 
         //Linked tables from db
-        public ICollection<Restaurant> Restaurants { get; set; }
+
+        [ValidateNever]
+        public PortraitFile? Portrait { get; set; }                                     //One(Chef)-to-One(Portrait)
+
+        [ValidateNever]
+        public virtual ICollection<Restaurant>? Restaurants { get; set; }               //Many(Restaurants)-to-Many(Chefs)
     }
 }

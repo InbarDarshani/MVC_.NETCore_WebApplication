@@ -14,38 +14,43 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace RateTheRest.Models
 {
-    public class Restaurant
-    {
-        public int RestaurantID { get; set; }
+	public class Restaurant
+	{
+		public Restaurant() { this.Chefs = new HashSet<Chef>(); }     //For the Many to Many Relation
 
-        [Required]
-        public string Name { get; set; }
+		public int RestaurantID { get; set; }
 
-        public string? Description { get; set; }
+		[Required]
+		public string Name { get; set; }
 
-        [ValidateNever]
-        public Location Location { get; set; }
+		public string? Description { get; set; }
 
-        [Display(Name = "Opening Hours")]
-        [ValidateNever]
-        public ICollection<DayHours>? OpeningHours { get; set; }
+		//Linked tables from db
 
-        [ValidateNever]
-        public List<Tag>? Tags { get; set; }                 //Vegan, Kosher, etc
+		[ValidateNever]
+		public virtual Location Location { get; set; }                                                      //One(Restaurant)-to-One(Location)
 
-        [ValidateNever]
-        public ImageFile? Logo { get; set; }               //Restaurant's logo image paths
+		[ValidateNever]
+		[Display(Name = "Opening Hours")]
+		public ICollection<OpeningHours>? OpeningHours { get; set; }                                        //One(Restaurant)-to-Many(OpeningHours)
 
-        [ValidateNever]
-        public List<ImageFile>? Photos { get; set; }         //Restaurant's images paths
+		[ValidateNever]
+		public ICollection<Tag>? Tags { get; set; }                 //Vegan, Kosher, etc					//One(Restaurant)-to-Many(Tags)
 
-        //Linked fields from db
-        [Display(Name = "Rating Score")]
-        public int RatingID { get; set; }       
-        public Rating Rating { get; set; }
+		[ValidateNever]
+		[Display(Name = "Rating Score")]   
+		public virtual Rating? Rating { get; set; }                                                         //One(Restaurant)-to-One(Rating)
 
-        //Linked tables from db
-        public ICollection<Chef> Chefs { get; set; }
-        public ICollection<Review> Reviews { get; set; }
-    }
+		[ValidateNever]
+		public ICollection<Review>? Reviews { get; set; }                                                   //One(Restaurant)-to-Many(Reviews)
+
+		[ValidateNever]
+		public LogoFile? Logo { get; set; }								//Restaurant's logo image paths     //One(Restaurant)-to-One(Logo)
+
+		[ValidateNever]
+		public ICollection<ImageFile>? Photos { get; set; }             //Restaurant's images paths         //One(Restaurant)-to-Many(Images)
+
+		[ValidateNever]
+		public virtual ICollection<Chef>? Chefs { get; set; }                                                //Many(Restaurants)-to-Many(Chefs)
+	}
 }

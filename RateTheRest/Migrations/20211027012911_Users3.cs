@@ -2,7 +2,7 @@
 
 namespace RateTheRest.Migrations
 {
-    public partial class Restaurant1 : Migration
+    public partial class Users3 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
