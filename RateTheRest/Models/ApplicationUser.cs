@@ -16,9 +16,9 @@ namespace RateTheRest.Models
         public string FirstName { get; set; }
 
         [Display(Name = "Last Name")]
-        public string LastName { get; set; } 
+        public string LastName { get; set; }
 
-        //Linked tables from db
+        //Relations
 
         [ValidateNever]
         public ICollection<Review>? Reviews { get; set; }                  //One(User)-to-Many(Review)

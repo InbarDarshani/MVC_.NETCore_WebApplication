@@ -36,8 +36,8 @@ namespace RateTheRest.Controllers
                 .Include(r => r.Tags)
                 .Include(r => r.Logo)
                 .Include(r => r.Photos)
-                .Include(r => r.Rating)
-                .Include(r => r.Reviews)
+                .Include(r => r.Rating).ThenInclude(r => r.Users)
+                .Include(r => r.Reviews).ThenInclude(r => r.User)
                 .Include(r => r.Chefs)
                 .ToListAsync());
         }
@@ -53,7 +53,7 @@ namespace RateTheRest.Controllers
                 .Include(r => r.Tags)
                 .Include(r => r.Logo)
                 .Include(r => r.Photos)
-                .Include(r => r.Rating)
+                .Include(r => r.Rating).ThenInclude(r => r.Users)
                 .Include(r => r.Reviews).ThenInclude(r => r.User)
                 .Include(r => r.Chefs)
                 .AsNoTracking()
@@ -82,6 +82,7 @@ namespace RateTheRest.Controllers
             nameof(Restaurant.Description))]
             Restaurant restaurant,
             [Bind(nameof(Location.LocationId),
+            nameof(Location.Country),
             nameof(Location.City),
             nameof(Location.Street),
             nameof(Location.Number))]
@@ -116,6 +117,9 @@ namespace RateTheRest.Controllers
             if (chefs.Count > 0)
                 restaurant.Chefs = UpdateChefs(chefs);
 
+            //Initial Rating
+            restaurant.Rating = new Rating() { Users = new List<ApplicationUser>() };
+
             //Check binding and valudation                         
             //if (!ModelState.IsValid) return View(restaurant);
 
@@ -139,10 +143,9 @@ namespace RateTheRest.Controllers
                 .Include(r => r.Tags)
                 .Include(r => r.Logo)
                 .Include(r => r.Photos)
-                .Include(r => r.Rating)
-                .Include(r => r.Reviews)
-                .Include(r => r.Chefs)
-                .AsNoTracking()
+                .Include(r => r.Rating).ThenInclude(r => r.Users)
+                .Include(r => r.Reviews).ThenInclude(r => r.User)
+                .Include(r => r.Chefs).ThenInclude(c => c.Restaurants)
                 .FirstOrDefaultAsync(m => m.RestaurantID == id);
 
             if (restaurant == null) return NotFound();
@@ -160,6 +163,7 @@ namespace RateTheRest.Controllers
             nameof(Restaurant.Description))]
             Restaurant restaurant,
             [Bind(nameof(Location.LocationId),
+            nameof(Location.Country),
             nameof(Location.City),
             nameof(Location.Street),
             nameof(Location.Number))]
@@ -174,15 +178,15 @@ namespace RateTheRest.Controllers
         {
             if (id != restaurant.RestaurantID) return NotFound();
 
-            restaurant = await _dbcontext.Restaurants
+            restaurant = await _dbcontext.Restaurants          //Include db tables
                 .Include(r => r.Location)
                 .Include(r => r.OpeningHours)
                 .Include(r => r.Tags)
                 .Include(r => r.Logo)
                 .Include(r => r.Photos)
-                .Include(r => r.Rating)
-                .Include(r => r.Reviews)
-                .Include(r => r.Chefs).ThenInclude(c => c.Portrait)
+                .Include(r => r.Rating).ThenInclude(r => r.Users)
+                .Include(r => r.Reviews).ThenInclude(r => r.User)
+                .Include(r => r.Chefs).ThenInclude(c => c.Restaurants)
                 .FirstOrDefaultAsync(m => m.RestaurantID == id);
 
             //Update opening hours (nullable)
@@ -205,6 +209,7 @@ namespace RateTheRest.Controllers
             //Update chefs list (nullable)
             if (chefs.Count > 0)
                 restaurant.Chefs = UpdateChefs(chefs, restaurant.RestaurantID);
+
 
             try
             {
@@ -238,9 +243,9 @@ namespace RateTheRest.Controllers
                 .Include(r => r.Tags)
                 .Include(r => r.Logo)
                 .Include(r => r.Photos)
-                .Include(r => r.Rating)
-                .Include(r => r.Reviews)
-                .Include(r => r.Chefs)
+                .Include(r => r.Rating).ThenInclude(r => r.Users)
+                .Include(r => r.Reviews).ThenInclude(r => r.User)
+                .Include(r => r.Chefs).ThenInclude(c => c.Restaurants)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.RestaurantID == id);
 
@@ -254,15 +259,15 @@ namespace RateTheRest.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var restaurant = await _dbcontext.Restaurants
+            var restaurant = await _dbcontext.Restaurants          //Include db tables
                 .Include(r => r.Location)
                 .Include(r => r.OpeningHours)
                 .Include(r => r.Tags)
                 .Include(r => r.Logo)
                 .Include(r => r.Photos)
-                .Include(r => r.Rating)
-                .Include(r => r.Reviews)
-                .Include(r => r.Chefs)
+                .Include(r => r.Rating).ThenInclude(r => r.Users)
+                .Include(r => r.Reviews).ThenInclude(r => r.User)
+                .Include(r => r.Chefs).ThenInclude(c => c.Restaurants)
                 .FirstOrDefaultAsync(m => m.RestaurantID == id);
 
             //Delete Files from directory (nullable)
@@ -365,7 +370,7 @@ namespace RateTheRest.Controllers
         {
             List<Tag> tags;
 
-            //Chek if clear all required
+            //Check if clear all required
             if (tagsNames.First() == "0")
                 return null;
 
@@ -379,14 +384,14 @@ namespace RateTheRest.Controllers
         {
             var chefs = new List<Chef>();
 
-            //Chek if clear all required
+            //Check if clear all required
             if (chefsIds.First() == 0)
                 return null;
 
             foreach (int cId in chefsIds)
             {
                 var chef = _dbcontext.Chefs.Find(cId);
-                chefs.Add(chef);        
+                chefs.Add(chef);
             }
 
             return chefs;
@@ -394,7 +399,6 @@ namespace RateTheRest.Controllers
 
         public void DeleteFiles(Restaurant restaurant)
         {
-            //Restaurant restaurant = _dbcontext.Restaurants.Find(restaurantID);
             string direcroty = Path.Combine(_environment.WebRootPath, "images", "Restaurants");
 
             if (restaurant.Logo != null)

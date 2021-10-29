@@ -13,16 +13,20 @@ namespace RateTheRest.Models
         [ForeignKey("Restaurant")]
         public int RatingID { get; set; }
 
-        public float Value { get; set; }            //The calculated value of the restaurant's ratings NumOfVotes\SumOfVotes
+        public float Value                     //The calculated value of the restaurant's ratings SumOfVotes/NumOfVotes
+        {
+            get
+            {
+                if (Restaurant.Reviews == null || Users == null) return 0;
+                if (Restaurant.Reviews.Count == 0 || Users.Count == 0) return 0;
+                return Restaurant.Reviews.Sum(r => r.Score) / Users.Count;
+            }
+        }
 
-        public int NumOfVotes { get; set; }         //The number of users who voted (Number of Users in the table below)
+        //Relations
 
-        public int SumOfVotes { get; set; }
+        public virtual Restaurant Restaurant { get; set; }                                              //One(Restaurant)-to-One(Rating)
 
-        //Linked tables from db
-
-        public virtual Restaurant Restaurant { get; set; }                                  //One(Restaurant)-to-One(Rating)
-        
-        public ICollection<ApplicationUser> User { get; set; }         //The Users who voted          //One(Rating)-to-Many(Users)
+        public ICollection<ApplicationUser> Users { get; set; } = new List<ApplicationUser>();        //The Users who voted          //One(Rating)-to-Many(Users)
     }
 }

@@ -28,7 +28,9 @@ namespace RateTheRest.Controllers
         {
             return View(await _dbcontext.Chefs
                 .Include(c => c.Portrait)
-                .Include(c => c.Restaurants).ToListAsync());
+                .Include(c => c.Restaurants).ThenInclude(r => r.Rating).ThenInclude(r => r.Users)
+                .Include(c => c.Restaurants).ThenInclude(r => r.Reviews)
+                .ToListAsync());
         }
         //_________________________________________________________
 
@@ -39,7 +41,8 @@ namespace RateTheRest.Controllers
 
             var chef = await _dbcontext.Chefs
                 .Include(c => c.Portrait)
-                .Include(c => c.Restaurants)
+                .Include(c => c.Restaurants).ThenInclude(r => r.Rating).ThenInclude(r => r.Users)
+                .Include(c => c.Restaurants).ThenInclude(r => r.Reviews)
                 .FirstOrDefaultAsync(m => m.ChefID == id);
 
             if (chef == null) return NotFound();

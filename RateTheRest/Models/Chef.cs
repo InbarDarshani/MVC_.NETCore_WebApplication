@@ -21,13 +21,21 @@ namespace RateTheRest.Models
         [Required]
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
-        
+
         public string? Description { get; set; }
 
         [Display(Name = "Average Rating Of Restaurants")]
-        public float? AvgRate { get; set; }                                //The chef's restaurants average rating score          
+        public float? AvgRate                                           //The chef's restaurants average rating score:  Sum Rating Values / Num Of Restaurants   
+        {
+            get
+            {
+                if (Restaurants == null) return 0;
+                if (Restaurants.ToList().Count == 0) return 0;
+                return Restaurants.Sum(r => r.Rating.Value) / Restaurants.ToList().Count;
+            }
+        }
 
-        //Linked tables from db
+        //Relations
 
         [ValidateNever]
         public PortraitFile? Portrait { get; set; }                                     //One(Chef)-to-One(Portrait)

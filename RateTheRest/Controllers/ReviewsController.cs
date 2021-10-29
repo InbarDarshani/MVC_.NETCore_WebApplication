@@ -79,8 +79,22 @@ namespace RateTheRest.Controllers
         public async Task<IActionResult> Create([Bind(nameof(Review.ReviewID), nameof(Review.Score), nameof(Review.Text))] Review review, int restaurantId)
         {
             review.DateCreated = DateTime.Now;
-            review.Restaurant = _dbcontext.Restaurants.Find(restaurantId);
-            review.User = _dbcontext.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
+            review.Restaurant = await _dbcontext.Restaurants          //Include db tables
+                .Include(r => r.Location)
+                .Include(r => r.OpeningHours)
+                .Include(r => r.Tags)
+                .Include(r => r.Logo)
+                .Include(r => r.Photos)
+                .Include(r => r.Rating).ThenInclude(r => r.Users)
+                .Include(r => r.Reviews).ThenInclude(r => r.User)
+                .Include(r => r.Chefs)
+                .FirstOrDefaultAsync(m => m.RestaurantID == restaurantId);
+            review.User = _dbcontext.Users
+                .Include(u => u.Rating).ThenInclude(r => r.Restaurant)
+                .FirstOrDefault(u => u.UserName == User.Identity.Name);
+
+            //Update Retaurant's Rating
+            review.Restaurant.Rating.Users.Add(review.User);
 
             _dbcontext.Add(review);
             await _dbcontext.SaveChangesAsync();
@@ -101,9 +115,45 @@ namespace RateTheRest.Controllers
                 .Include(r => r.User)
                 .FirstOrDefaultAsync(m => m.ReviewID == id);
 
+            //Update Retaurant's Rating
+            review.Restaurant.Rating.Users.Remove(review.User);
+
             _dbcontext.Reviews.Remove(review);
             await _dbcontext.SaveChangesAsync();
             return RedirectToAction("Index", new { username = User.Identity.Name });
+        }
+        //_________________________________________________________________________________________________________________________________________________
+
+
+
+        //_____________________________________________Additional Functions___________________________________________________________________________________
+
+        public void UpdateRating(Review review, string action = "add")
+        {
+            var restaurant = review.Restaurant;
+            var user = review.User;
+            Rating rating = restaurant.Rating;
+            var chefs = _dbcontext.Chefs.Where(c => c.Restaurants.Contains(restaurant)).ToList();
+
+
+            ////Update rating parameters
+            //if (action == "delete")
+            //{
+            //    rating.SumOfVotes -= review.Score;
+            //    rating.NumOfVotes -= 1;
+            //    rating.Value = rating.SumOfVotes / rating.NumOfVotes;
+            //}
+            //else
+            //{
+            //    rating.Users.Add(user);
+            //    rating.SumOfVotes += review.Score;
+            //    rating.NumOfVotes += 1;
+            //    rating.Value = rating.SumOfVotes / rating.NumOfVotes;
+            //}
+
+            ////Update chefs rating related parameter
+            //foreach (Chef c in chefs)
+            //    c.AvgRate = c.Restaurants.Sum(r => r.Rating.Value) / c.Restaurants.ToList().Count;
         }
 
 
@@ -113,6 +163,33 @@ namespace RateTheRest.Controllers
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //_________________________________________________________________________________________________________________________________________________
 
         //_________________________________NOT IN USE__________________________________________________________________
         // GET: Reviews

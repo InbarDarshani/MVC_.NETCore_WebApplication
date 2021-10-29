@@ -21,7 +21,7 @@ namespace RateTheRest.Models
 
         public DateTime DateCreated { get; set; }
 
-        //Linked fields from db
+        //Relations
 
         public Restaurant Restaurant { get; set; }               //One(Restaurant)-to-Many(Reviews)
 
