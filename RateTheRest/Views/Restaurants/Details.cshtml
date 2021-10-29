@@ -5,7 +5,8 @@
 }
 
 <h1>Details</h1>
-<script defer src="~/js/Restaurants.js"></script>
+<script defer src="~/js/Restaurants_Details.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
 <div>
     <h4>Restaurant</h4>
@@ -151,7 +152,8 @@
             <button type="button" id="createReview" class="btn">Create Review</button>
         </dt>
         <dd class="col-sm-10">
-            <div id="createReview-div" value="@Model.RestaurantID"></div>
+            <input type="hidden" id="restaurantIdValue" value="@Model.RestaurantID" />
+            <div id="createReviewPartial"></div>
         </dd>
     </dl>
 

@@ -13,7 +13,6 @@ namespace RateTheRest.Models
     {
         public int ReviewID { get; set; }
 
-        [Range(0,10,ErrorMessage = "Please insert a number between 0 to 10")]
         [Display(Name = "Restaurant Score")]
         public int Score { get; set; }            //An Individual rating score by this user 1-10
 

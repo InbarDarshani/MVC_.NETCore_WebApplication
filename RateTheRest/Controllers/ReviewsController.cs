@@ -22,6 +22,27 @@ namespace RateTheRest.Controllers
 
         //_____________________________________________Actions Functions___________________________________________________________________________________
 
+        // GET: Reviews -> User's MyReviwes Page
+        public async Task<IActionResult> Index(string username)
+        {
+            if (username == null) return NotFound();
+
+            var user = _dbcontext.Users
+                    .Where(u => u.UserName == username)
+                    .Include(u => u.Reviews)
+                    .FirstOrDefault();
+
+            if (user.Reviews == null)
+                ViewData["UserReviews"] = new List<Review>();
+            else
+                ViewData["UserReviews"] = user.Reviews.ToList();
+
+            return View(await _dbcontext.Reviews
+                    .Include(r => r.Restaurant)
+                    .Include(r => r.User)
+                    .ToListAsync());
+        }
+
         //Partial View! - Show the Review in Restaurant Details page
         // GET: Reviews/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -68,32 +89,21 @@ namespace RateTheRest.Controllers
         }
         //_________________________________________________________
 
-        //Partial View! - Create a Review in Restaurant Details page
-        // GET: Reviews/Delete/5
-        //[Authorize] - Manually
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (!User.Identity.IsAuthenticated)
-                return PartialView("_AuthenticationRequiredPartial");
-
-            return PartialView("CreatePartial");
-        }
-
+        //Form - Delete a Review in user's reviews page
         // POST: Reviews/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //[Authorize] - Manually authorize current user
-        public async Task<IActionResult> DeleteConfirmed(int id, int restaurantId)
+        //[Authorize] - No need 
+        public async Task<IActionResult> Delete(int id)
         {
-            if (User.Identity.Name != _dbcontext.Reviews.Find(id).User.UserName)
-                return PartialView("_AccessDeniedPartial");
-
             var review = await _dbcontext.Reviews
                 .Include(r => r.Restaurant)
                 .Include(r => r.User)
                 .FirstOrDefaultAsync(m => m.ReviewID == id);
 
-            return RedirectToAction("Details", "Restaurants", new { id = restaurantId });
+            _dbcontext.Reviews.Remove(review);
+            await _dbcontext.SaveChangesAsync();
+            return RedirectToAction("Index", new { username = User.Identity.Name });
         }
 
 
