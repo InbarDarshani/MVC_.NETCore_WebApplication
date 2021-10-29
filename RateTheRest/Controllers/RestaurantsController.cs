@@ -145,7 +145,7 @@ namespace RateTheRest.Controllers
                 .Include(r => r.Photos)
                 .Include(r => r.Rating).ThenInclude(r => r.Users)
                 .Include(r => r.Reviews).ThenInclude(r => r.User)
-                .Include(r => r.Chefs).ThenInclude(c => c.Restaurants)
+                .Include(r => r.Chefs)
                 .FirstOrDefaultAsync(m => m.RestaurantID == id);
 
             if (restaurant == null) return NotFound();
@@ -186,7 +186,7 @@ namespace RateTheRest.Controllers
                 .Include(r => r.Photos)
                 .Include(r => r.Rating).ThenInclude(r => r.Users)
                 .Include(r => r.Reviews).ThenInclude(r => r.User)
-                .Include(r => r.Chefs).ThenInclude(c => c.Restaurants)
+                .Include(r => r.Chefs)
                 .FirstOrDefaultAsync(m => m.RestaurantID == id);
 
             //Update opening hours (nullable)
@@ -245,7 +245,7 @@ namespace RateTheRest.Controllers
                 .Include(r => r.Photos)
                 .Include(r => r.Rating).ThenInclude(r => r.Users)
                 .Include(r => r.Reviews).ThenInclude(r => r.User)
-                .Include(r => r.Chefs).ThenInclude(c => c.Restaurants)
+                .Include(r => r.Chefs)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.RestaurantID == id);
 
@@ -267,7 +267,7 @@ namespace RateTheRest.Controllers
                 .Include(r => r.Photos)
                 .Include(r => r.Rating).ThenInclude(r => r.Users)
                 .Include(r => r.Reviews).ThenInclude(r => r.User)
-                .Include(r => r.Chefs).ThenInclude(c => c.Restaurants)
+                .Include(r => r.Chefs)
                 .FirstOrDefaultAsync(m => m.RestaurantID == id);
 
             //Delete Files from directory (nullable)
@@ -298,7 +298,7 @@ namespace RateTheRest.Controllers
                 return new LogoFile();
 
             //Delete existing logo from db if restaurant exists
-            if (RestaurantExists(restaurantID) && logo != null)
+            if (_dbcontext.Restaurants.Find(restaurantID).Logo != null)
             {
                 LogoFile remove = _dbcontext.Logos.Where(l => l.Restaurant.RestaurantID == restaurantID).FirstOrDefault();
                 _dbcontext.Logos.Remove(remove);
@@ -324,7 +324,7 @@ namespace RateTheRest.Controllers
             int imageNumber = 1;
 
             //Check if more photos are added to existing resaurant
-            if (RestaurantExists(restaurantID))
+            if (_dbcontext.Restaurants.Find(restaurantID).Photos != null)
                 uploadedImages = _dbcontext.Images.Where(l => l.Restaurant.RestaurantID == restaurantID).ToList();
 
             //Upload

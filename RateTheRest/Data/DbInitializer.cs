@@ -20,18 +20,18 @@ namespace RateTheRest.Data
 
             var restaurants = new Restaurant[]
             {
+                //Eyal Shani
                 new Restaurant { Name = "Malka",
                     Location = new Location { Country = "Israel", City = "Tel Aviv", Street = "Dafna", Number = 2 }},
 
                 new Restaurant { Name = "Miznon",
                     Location = new Location { Country = "Israel", City = "Tel Aviv", Street = "Shlomo Ibn Gabirol", Number = 23 } },
 
+                //Meir Adoni
                 new Restaurant { Name = "Dunya",
                     Location = new Location { Country = "Israel", City = "Ashkelon", Street = "HaNamal ", Number = 9 } },
 
-                new Restaurant { Name = "YAM",
-                    Location = new Location { Country = "Israel", City = "Jerusalem", Street = "HaAliya ", Number = 1 } },
-
+                //Assaf Granit
                 new Restaurant { Name = "Machneyuda",
                     Location = new Location { Country = "Israel", City = "Jerusalem", Street = "Beit Ya'akov", Number = 10 } },
 

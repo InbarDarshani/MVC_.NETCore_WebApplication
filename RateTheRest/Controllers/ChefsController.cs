@@ -96,7 +96,8 @@ namespace RateTheRest.Controllers
 
             var chef = await _dbcontext.Chefs
                 .Include(c => c.Portrait)
-                .Include(c => c.Restaurants)
+                .Include(c => c.Restaurants).ThenInclude(r => r.Rating).ThenInclude(r => r.Users)
+                .Include(c => c.Restaurants).ThenInclude(r => r.Reviews)
                 .FirstOrDefaultAsync(m => m.ChefID == id);
 
             if (chef == null) return NotFound();
@@ -159,7 +160,8 @@ namespace RateTheRest.Controllers
 
             var chef = await _dbcontext.Chefs
                 .Include(c => c.Portrait)
-                .Include(c => c.Restaurants)
+                .Include(c => c.Restaurants).ThenInclude(r => r.Rating).ThenInclude(r => r.Users)
+                .Include(c => c.Restaurants).ThenInclude(r => r.Reviews)
                 .FirstOrDefaultAsync(m => m.ChefID == id);
 
             if (chef == null) { return NotFound(); }
@@ -203,8 +205,8 @@ namespace RateTheRest.Controllers
             if (portrait == null)
                 return new PortraitFile();
 
-            //Delete existing logo from db if restaurant exists
-            if (ChefExists(chefID) && portrait != null)
+            //Delete existing logo from db if exists
+            if (_dbcontext.Chefs.Find(chefID).Portrait != null)
             {
                 List<IFormFile> remove = _dbcontext.Logos.Where(l => l.Restaurant.RestaurantID == chefID) as List<IFormFile>;
                 _dbcontext.Portraits.RemoveRange((IEnumerable<PortraitFile>)remove);
