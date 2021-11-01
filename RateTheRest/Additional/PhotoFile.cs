@@ -19,32 +19,35 @@ namespace RateTheRest.Additional
 		public string Path { get; set; }            //examples: ~\images\Restaurants\_logo_24.10.2021_13.24.46.png            
 		public string FileName { get; set; }        //examples: _logo_20.10.2021_02.12.12.png 
 
-		//Linked tables from db
-		
-		public virtual Restaurant Restaurant { get; set; }             //One(Restaurant)-to-One(Logo)
+        //Relations
+
+        //One(Restaurant)-to-One(Logo)
+        public virtual Restaurant Restaurant { get; set; }             
 	}
 
-	public class ImageFile
+	public class PhotoFile
 	{
-		public int ImageFileID { get; set; }
+		public int PhotoFileID { get; set; }
 		public string Path { get; set; }            //examples: ~\images\Restaurants\_photo_20.10.2021_02.12.13_2.png            
 		public string FileName { get; set; }        //examples:  _photo_20.10.2021_02.12.13_2.png
 
-		//Linked tables from db
+        //Relations
 
-		public Restaurant Restaurant { get; set; }				//One(Restaurant)-to-Many(Images)
+        //One(Restaurant)-to-Many(Images)
+        public Restaurant Restaurant { get; set; }				
 	}
 
 	public class PortraitFile
 	{
 		[ForeignKey("Chef")]
 		public int PortraitFileID { get; set; }
-		public string Path { get; set; }            //examples: ~\images\Restaurants\_photo_20.10.2021_02.12.13_2.png            
-		public string FileName { get; set; }        //examples:  _photo_20.10.2021_02.12.13_2.png
+		public string Path { get; set; }            //examples: ~\images\Chefs\_photo_20.10.2021_02.12.13_2.png            
+		public string FileName { get; set; }        //examples:  _portrait_20.10.2021_02.12.13_2.png
 
-		//Linked tables from db
+        //Relations
 
-		public virtual Chef Chef { get; set; }                     //One(Chef)-to-One(Portrait)
+        //One(Chef)-to-One(Portrait)
+        public virtual Chef Chef { get; set; }                     
 	}
 
 }

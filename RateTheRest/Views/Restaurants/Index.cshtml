@@ -16,10 +16,10 @@
                 @Html.DisplayNameFor(model => model.Logo)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Chefs)
+                @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.DisplayNameFor(model => model.Chefs)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Location)
@@ -43,8 +43,16 @@
                 <td>
                     @if (item.Logo != null)
                     {
-                        <img src="@Url.Content(item.Logo.Path)" alt="Logo" class="img-thumbnail" width="100" height="100">
+                        <a asp-action="Details" asp-route-id="@item.RestaurantID">
+                            <img src="@Url.Content(item.Logo.Path)" alt="Logo" class="img-thumbnail" width="100" height="100">
+                        </a>
                     }
+                </td>
+
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.RestaurantID">
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </a>
                 </td>
 
                 <td>
@@ -59,9 +67,6 @@
                     }
                 </td>
 
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
 
                 <td>
                     @Html.DisplayFor(modelItem => item.Location.Number)
@@ -98,7 +103,7 @@
                 </td>
 
                 <td>
-                    @Html.DisplayFor(modelItem => item.Rating.Value)
+                    @Html.DisplayFor(modelItem => item.Rating.Score)
                 </td>
 
                 <td>

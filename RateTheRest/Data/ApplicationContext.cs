@@ -42,7 +42,7 @@ namespace RateTheRest.Data
         public DbSet<Rating> Ratings { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<LogoFile> Logos { get; set; }
-        public DbSet<ImageFile> Images { get; set; }
+        public DbSet<PhotoFile> Photos { get; set; }
         public DbSet<PortraitFile> Portraits { get; set; }
         public DbSet<Location> Locations { get; set; }
         public DbSet<OpeningHours> OpeningHours { get; set; }

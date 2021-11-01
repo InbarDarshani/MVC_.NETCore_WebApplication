@@ -22,30 +22,38 @@ namespace RateTheRest.Data
             {
                 //Eyal Shani
                 new Restaurant { Name = "Malka",
-                    Location = new Location { Country = "Israel", City = "Tel Aviv", Street = "Dafna", Number = 2 }},
+                    Location = new Location { Country = "Israel", City = "Tel Aviv", Street = "Dafna", Number = 2 },
+                    },
 
                 new Restaurant { Name = "Miznon",
-                    Location = new Location { Country = "Israel", City = "Tel Aviv", Street = "Shlomo Ibn Gabirol", Number = 23 } },
+                    Location = new Location { Country = "Israel", City = "Tel Aviv", Street = "Shlomo Ibn Gabirol", Number = 23 },
+                    },
 
                 //Meir Adoni
                 new Restaurant { Name = "Dunya",
-                    Location = new Location { Country = "Israel", City = "Ashkelon", Street = "HaNamal ", Number = 9 } },
+                    Location = new Location { Country = "Israel", City = "Ashkelon", Street = "HaNamal ", Number = 9 },
+                    },
 
                 //Assaf Granit
                 new Restaurant { Name = "Machneyuda",
-                    Location = new Location { Country = "Israel", City = "Jerusalem", Street = "Beit Ya'akov", Number = 10 } },
+                    Location = new Location { Country = "Israel", City = "Jerusalem", Street = "Beit Ya'akov", Number = 10 },
+                    },
 
                 new Restaurant { Name = "Yudale",
-                    Location = new Location { Country = "Israel", City = "Jerusalem", Street = "Beit Ya'akov", Number = 11 } },
+                    Location = new Location { Country = "Israel", City = "Jerusalem", Street = "Beit Ya'akov", Number = 11 },
+                    },
 
                 new Restaurant { Name = "Hasadna",
-                    Location = new Location { Country = "Israel", City = "Jerusalem", Street = "Hebron road", Number = 28 } },
+                    Location = new Location { Country = "Israel", City = "Jerusalem", Street = "Hebron road", Number = 28 },
+                    },
 
                 new Restaurant { Name = "The Palomar",
-                    Location = new Location { Country = "UK", City = "London", Street = "Rupert", Number = 34 } },
+                    Location = new Location { Country = "UK", City = "London", Street = "Rupert", Number = 34 },
+                    },
 
                 new Restaurant { Name = "Shabour",
-                    Location = new Location { Country = "France", City = "Paris", Street = "Rue Saint-Sauveur", Number = 19 } }
+                    Location = new Location { Country = "France", City = "Paris", Street = "Rue Saint-Sauveur", Number = 19 },
+                    }
             };
             foreach (Restaurant r in restaurants) { context.Restaurants.Add(r); }
             context.SaveChanges();
@@ -60,14 +68,6 @@ namespace RateTheRest.Data
             };
             foreach (Chef c in chefs) { context.Chefs.Add(c); }
             context.SaveChanges();
-
-            //var roles = new IdentityRole[]
-            //{
-            //    new IdentityRole("Admin"),
-            //    new IdentityRole("Basic")
-            //};
-            //foreach (IdentityRole i in roles) { context.Roles.Add(i); }
-            //context.SaveChanges();
 
             var users = new ApplicationUser[]
             {
@@ -85,22 +85,6 @@ namespace RateTheRest.Data
             };
             foreach (ApplicationUser u in users) { context.Users.Add(u); }
             context.SaveChanges();
-        }
-
-        public static List<OpeningHours> InitializeOpeningHours()
-        {
-            var openingHours = new OpeningHours[]
-            {
-                new OpeningHours { DayOfWeek = "Sunday", Open = false },
-                new OpeningHours { DayOfWeek = "Monday", Open = false },
-                new OpeningHours { DayOfWeek = "Tuesday", Open = false },
-                new OpeningHours { DayOfWeek = "Wednesday", Open = false },
-                new OpeningHours { DayOfWeek = "Thursday", Open = false },
-                new OpeningHours { DayOfWeek = "Friday", Open = false },
-                new OpeningHours { DayOfWeek = "Saturday", Open = false },
-            };
-
-            return openingHours.ToList<OpeningHours>();
         }
     }
 }

@@ -76,9 +76,10 @@ namespace RateTheRest.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Create([Bind(nameof(Review.ReviewID), nameof(Review.Score), nameof(Review.Text))] Review review, int restaurantId)
+        public async Task<IActionResult> Create([Bind(nameof(Review.ReviewID), nameof(Review.Text))] Review review, int score, int restaurantId)
         {
             review.DateCreated = DateTime.Now;
+            review.Score = score;
             review.Restaurant = await _dbcontext.Restaurants          //Include db tables
                 .Include(r => r.Location)
                 .Include(r => r.OpeningHours)
@@ -92,7 +93,7 @@ namespace RateTheRest.Controllers
             review.User = _dbcontext.Users
                 .Include(u => u.Rating).ThenInclude(r => r.Restaurant)
                 .FirstOrDefault(u => u.UserName == User.Identity.Name);
-
+        
             //Update Retaurant's Rating
             review.Restaurant.Rating.Users.Add(review.User);
 
@@ -141,19 +142,19 @@ namespace RateTheRest.Controllers
             //{
             //    rating.SumOfVotes -= review.Score;
             //    rating.NumOfVotes -= 1;
-            //    rating.Value = rating.SumOfVotes / rating.NumOfVotes;
+            //    Rating.Score = rating.SumOfVotes / rating.NumOfVotes;
             //}
             //else
             //{
             //    rating.Users.Add(user);
             //    rating.SumOfVotes += review.Score;
             //    rating.NumOfVotes += 1;
-            //    rating.Value = rating.SumOfVotes / rating.NumOfVotes;
+            //    Rating.Score = rating.SumOfVotes / rating.NumOfVotes;
             //}
 
             ////Update chefs rating related parameter
             //foreach (Chef c in chefs)
-            //    c.AvgRate = c.Restaurants.Sum(r => r.Rating.Value) / c.Restaurants.ToList().Count;
+            //    c.AvgRate = c.Restaurants.Sum(r => r.Rating.Score) / c.Restaurants.ToList().Count;
         }
 
 

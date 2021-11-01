@@ -72,8 +72,9 @@ namespace RateTheRest.Controllers
             List<int> restaurants)
         {
 
-            //Upload and update portrait photo
-            chef.Portrait = UpdatePortrait(portrait);
+            //Upload and update portrait photo (nullable)
+            if (portrait != null)
+                chef.Portrait = UpdatePortrait(portrait);
 
             //Update restaurants list (nullable)
             if (restaurants.Count > 0)
@@ -195,21 +196,17 @@ namespace RateTheRest.Controllers
             return _dbcontext.Chefs.Any(e => e.ChefID == id);
         }
 
-        //TOOD: delete also file from wwwroot\images\Chefs
         public PortraitFile UpdatePortrait(IFormFile portrait, int chefID = -1)
         {
             string relativePath = Path.Combine("images", "Chefs");
             string filename;
             PortraitFile uploadedPortrait;
 
-            if (portrait == null)
-                return new PortraitFile();
-
-            //Delete existing logo from db if exists
-            if (_dbcontext.Chefs.Find(chefID).Portrait != null)
+            //Delete existing or default logo from db if chef exists
+            if (ChefExists(chefID))
             {
-                List<IFormFile> remove = _dbcontext.Logos.Where(l => l.Restaurant.RestaurantID == chefID) as List<IFormFile>;
-                _dbcontext.Portraits.RemoveRange((IEnumerable<PortraitFile>)remove);
+                PortraitFile remove = _dbcontext.Portraits.Where(p => p.Chef.ChefID == chefID).FirstOrDefault();
+                _dbcontext.Portraits.Remove(remove);
             }
 
             //Upload
@@ -219,7 +216,6 @@ namespace RateTheRest.Controllers
                 portrait.CopyTo(stream);
                 uploadedPortrait = new PortraitFile { Path = Path.Combine("~/", relativePath, filename), FileName = filename };
             }
-
             return uploadedPortrait;
         }
 

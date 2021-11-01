@@ -18,8 +18,9 @@ namespace RateTheRest.Additional
         public int TagID { get; set; }
         public string TagName { get; set; }
 
-        //Linked tables from db
+        //Relations
 
-        public Restaurant Restaurant { get; set; }              //One(Restaurant)-to-Many(Tags)
+        //One(Restaurant)-to-Many(Tags)
+        public Restaurant Restaurant { get; set; }              
     }
 }

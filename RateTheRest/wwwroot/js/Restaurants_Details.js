@@ -1,5 +1,4 @@
-﻿
-//Reviews
+﻿//Reviews
 $(document).ready(function () {
     //Create a review button
     $("#createReview").click(function () {

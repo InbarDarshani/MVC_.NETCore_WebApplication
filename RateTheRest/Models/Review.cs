@@ -14,7 +14,7 @@ namespace RateTheRest.Models
         public int ReviewID { get; set; }
 
         [Display(Name = "Restaurant Score")]
-        public int Score { get; set; }            //An Individual rating score by this user 1-10
+        public int Score { get; set; }              //An Individual rating score by this user
 
         [Display(Name = "Short Description")]
         public string? Text { get; set; }           //Optional description of the review
@@ -23,8 +23,10 @@ namespace RateTheRest.Models
 
         //Relations
 
-        public Restaurant Restaurant { get; set; }               //One(Restaurant)-to-Many(Reviews)
+        //One(Restaurant)-to-Many(Reviews)
+        public Restaurant Restaurant { get; set; }
 
+        //One(User)-to-Many(Reviews)
         public ApplicationUser User { get; set; }                          
     }
 }
