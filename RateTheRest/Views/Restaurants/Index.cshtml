@@ -2,13 +2,67 @@
 
 @{
     ViewData["Title"] = "Index";
+    var filtersPlaceHolders = (string[])ViewData["FiltersPlaceHolders"];
 }
 
 <h1>Index</h1>
 
+<!--Searching table-->
+<form action="/Restaurants" method="post">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Filter</th>
+                <th>By Name</th>
+                <th>By Chef</th>
+                <th>By Location</th>
+                <th>By Tag</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+
+                <td></td>
+                <td>
+                    <p>
+                        <input hidden name="searchBy" type="text" value="Name">
+                        <input name="searchString" type="text" value="" placeholder="@filtersPlaceHolders[0]">
+                    </p>
+                </td>
+                <td>
+                    <p>
+                        <input hidden name="searchBy" type="text" value="Chef">
+                        <input name="searchString" type="text" value="" placeholder="@filtersPlaceHolders[1]">
+                    </p>
+                </td>
+                <td>
+                    <p>
+                        <input hidden name="searchBy" type="text" value="Location">
+                        <input name="searchString" type="text" value="" placeholder="@filtersPlaceHolders[2]">
+                    </p>
+                </td>
+                <td>
+                    <p>
+                        <input hidden name="searchBy" type="text" value="Tag">
+                        <input name="searchString" type="text" value="" placeholder="@filtersPlaceHolders[3]">
+                    </p>
+                </td>
+                <td>
+                    <input type="submit" value="Filter" />
+                </td>
+                <td>
+                    <a asp-action="Index">Clear Filters</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
+<!--Index table-->
 <table class="table">
     <thead>
         <tr>
@@ -107,7 +161,6 @@
                 </td>
 
                 <td>
-                    <a asp-action="Details" asp-route-id="@item.RestaurantID">Details</a> |
                     <a asp-action="Edit" asp-route-id="@item.RestaurantID">Edit</a> |
                     <a asp-action="Delete" asp-route-id="@item.RestaurantID">Delete</a>
                 </td>

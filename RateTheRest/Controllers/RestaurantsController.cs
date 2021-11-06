@@ -28,7 +28,7 @@ namespace RateTheRest.Controllers
         //_____________________________________________Actions Functions___________________________________________________________________________________
 
         // GET: Restaurants
-        public async Task<IActionResult> Index(string searchByName, string searchByTag, string searchByChefName, string groupByTag, string sortByRating)
+        public async Task<IActionResult> Index(List<string> searchString, List<string> searchBy)
         {
             IEnumerable<Restaurant> restaurants = _dbcontext.Restaurants
                 .Include(r => r.Location)
@@ -40,28 +40,55 @@ namespace RateTheRest.Controllers
                 .Include(r => r.Reviews).ThenInclude(r => r.User)
                 .Include(r => r.Chefs)
                 .ToList();
-                    
 
-            if (!String.IsNullOrEmpty(searchByName))
+            //Perform search
+            IEnumerable<(string searchBy, string searchString)> filters = searchBy.Zip(searchString, (s1, s2) => (s1, s2));
+            foreach (var sb in filters)
             {
-                restaurants = from r in restaurants
-                              where r.Name.Contains(searchByName)
-                              select r;
+                if (!string.IsNullOrEmpty(sb.searchString))
+                {
+                    switch (sb.searchBy)
+                    {
+                        case "Name":
+                            {
+                                restaurants = from r in restaurants
+                                              where r.Name.Contains(sb.searchString)
+                                              select r;
+                                break;
+                            }
+                        case "Chef":
+                            {
+                                restaurants = from r in restaurants
+                                              where r.Chefs.Any(c => c.FirstName.Contains(sb.searchString) || c.LastName.Contains(sb.searchString))
+                                              select r;
+                                break;
+                            }
+                        case "Location":
+                            {
+                                restaurants = from r in restaurants
+                                              join l in _dbcontext.Locations
+                                              on r.RestaurantID equals l.Restaurant.RestaurantID
+                                              where l.Country.Contains(sb.searchString) || l.City.Contains(sb.searchString) || l.Street.Contains(sb.searchString)
+                                              select r;
+                                break;
+                            }
+                        case "Tag":
+                            {
+                                restaurants = from r in restaurants
+                                              where r.Tags.Any(t => t.TagName.Contains(sb.searchString))
+                                              select r;
+                                break;
+                            }
+                        default:
+                            break;
+                    }
+                }
             }
 
-            if (!String.IsNullOrEmpty(searchByTag))
-            {
-                restaurants = from t in _dbcontext.Tags
-                              where t.TagName.Contains(searchByTag)
-                              select t.Restaurant;
-            }
-
-            if (!String.IsNullOrEmpty(searchByChefName))
-            {
-
-            }
-
-
+            if (searchString.Count > 0)
+                ViewData["FiltersPlaceHolders"] = searchString.ToArray();
+            else
+                ViewData["FiltersPlaceHolders"] = new string[4];
             return View(restaurants);
         }
 
@@ -207,7 +234,7 @@ namespace RateTheRest.Controllers
                 .FirstOrDefaultAsync(m => m.RestaurantID == id);
 
             //Update properties
-            if (Name != null)           
+            if (Name != null)
                 restaurant.Name = Name;
             if (Description != null)
                 restaurant.Description = Description;
