@@ -16,17 +16,16 @@ namespace RateTheRest.Models
         public string FirstName { get; set; }
 
         [Display(Name = "Last Name")]
-        public string LastName { get; set; } 
+        public string LastName { get; set; }
 
-        //Linked tables from db
+        //Relations
 
+        //One(User)-to-Many(Review)
         [ValidateNever]
-        public ICollection<Review>? Reviews { get; set; }                  //One(User)-to-Many(Review)
+        public ICollection<Review>? Reviews { get; set; }
 
+        //One(Rating)-to-Many(Users)
         [ValidateNever]
-        public Rating? Rating { get; set; }                              //One(Rating)-to-Many(Users)
+        public Rating? Rating { get; set; }                              
     }
-
-
-
 }

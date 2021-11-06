@@ -22,6 +22,27 @@ namespace RateTheRest.Controllers
 
         //_____________________________________________Actions Functions___________________________________________________________________________________
 
+        // GET: Reviews -> User's MyReviwes Page
+        public async Task<IActionResult> Index(string username)
+        {
+            if (username == null) return NotFound();
+
+            var user = _dbcontext.Users
+                    .Where(u => u.UserName == username)
+                    .Include(u => u.Reviews)
+                    .FirstOrDefault();
+
+            if (user.Reviews == null)
+                ViewData["UserReviews"] = new List<Review>();
+            else
+                ViewData["UserReviews"] = user.Reviews.ToList();
+
+            return View(await _dbcontext.Reviews
+                    .Include(r => r.Restaurant)
+                    .Include(r => r.User)
+                    .ToListAsync());
+        }
+
         //Partial View! - Show the Review in Restaurant Details page
         // GET: Reviews/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -55,45 +76,90 @@ namespace RateTheRest.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Create([Bind(nameof(Review.ReviewID), nameof(Review.Score), nameof(Review.Text))] Review review, int restaurantId)
+        public async Task<IActionResult> Create([Bind(nameof(Review.ReviewID), nameof(Review.Text))] Review review, int score, int restaurantId)
         {
             review.DateCreated = DateTime.Now;
-            review.Restaurant = _dbcontext.Restaurants.Find(restaurantId);
-            review.User = _dbcontext.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
+            review.Score = score;
+            review.Restaurant = await _dbcontext.Restaurants          //Include db tables
+                .Include(r => r.Location)
+                .Include(r => r.OpeningHours)
+                .Include(r => r.Tags)
+                .Include(r => r.Logo)
+                .Include(r => r.Photos)
+                .Include(r => r.Rating).ThenInclude(r => r.Users)
+                .Include(r => r.Reviews).ThenInclude(r => r.User)
+                .Include(r => r.Chefs)
+                .FirstOrDefaultAsync(m => m.RestaurantID == restaurantId);
+            review.User = _dbcontext.Users
+                .Include(u => u.Rating).ThenInclude(r => r.Restaurant)
+                .FirstOrDefault(u => u.UserName == User.Identity.Name);
 
             _dbcontext.Add(review);
+            await _dbcontext.SaveChangesAsync();
+        
+            //Update Retaurant's Rating
+            review.Restaurant.Rating.Users.Add(review.User);
+            review.Restaurant.Rating.Score = review.Restaurant.Rating.calcScore();
             await _dbcontext.SaveChangesAsync();
 
             return RedirectToAction("Details", "Restaurants", new { id = restaurantId });
         }
         //_________________________________________________________
 
-        //Partial View! - Create a Review in Restaurant Details page
-        // GET: Reviews/Delete/5
-        //[Authorize] - Manually
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (!User.Identity.IsAuthenticated)
-                return PartialView("_AuthenticationRequiredPartial");
-
-            return PartialView("CreatePartial");
-        }
-
+        //Form - Delete a Review in user's reviews page
         // POST: Reviews/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //[Authorize] - Manually authorize current user
-        public async Task<IActionResult> DeleteConfirmed(int id, int restaurantId)
+        //[Authorize] - No need 
+        public async Task<IActionResult> Delete(int id)
         {
-            if (User.Identity.Name != _dbcontext.Reviews.Find(id).User.UserName)
-                return PartialView("_AccessDeniedPartial");
-
             var review = await _dbcontext.Reviews
                 .Include(r => r.Restaurant)
                 .Include(r => r.User)
                 .FirstOrDefaultAsync(m => m.ReviewID == id);
 
-            return RedirectToAction("Details", "Restaurants", new { id = restaurantId });
+            _dbcontext.Reviews.Remove(review);
+            await _dbcontext.SaveChangesAsync();
+
+            //Update Retaurant's Rating
+            review.Restaurant.Rating.Users.Remove(review.User);
+            review.Restaurant.Rating.Score = review.Restaurant.Rating.calcScore();
+            await _dbcontext.SaveChangesAsync();
+
+            return RedirectToAction("Index", new { username = User.Identity.Name });
+        }
+        //_________________________________________________________________________________________________________________________________________________
+
+
+
+        //_____________________________________________Additional Functions___________________________________________________________________________________
+
+        public void UpdateRating(Review review, string action = "add")
+        {
+            var restaurant = review.Restaurant;
+            var user = review.User;
+            Rating rating = restaurant.Rating;
+            var chefs = _dbcontext.Chefs.Where(c => c.Restaurants.Contains(restaurant)).ToList();
+
+
+            ////Update rating parameters
+            //if (action == "delete")
+            //{
+            //    rating.SumOfVotes -= review.Score;
+            //    rating.NumOfVotes -= 1;
+            //    Rating.Score = rating.SumOfVotes / rating.NumOfVotes;
+            //}
+            //else
+            //{
+            //    rating.Users.Add(user);
+            //    rating.SumOfVotes += review.Score;
+            //    rating.NumOfVotes += 1;
+            //    Rating.Score = rating.SumOfVotes / rating.NumOfVotes;
+            //}
+
+            ////Update chefs rating related parameter
+            //foreach (Chef c in chefs)
+            //    c.AvgRate = c.Restaurants.Sum(r => r.Rating.Score) / c.Restaurants.ToList().Count;
         }
 
 
@@ -103,6 +169,33 @@ namespace RateTheRest.Controllers
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //_________________________________________________________________________________________________________________________________________________
 
         //_________________________________NOT IN USE__________________________________________________________________
         // GET: Reviews

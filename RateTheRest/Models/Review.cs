@@ -13,19 +13,20 @@ namespace RateTheRest.Models
     {
         public int ReviewID { get; set; }
 
-        [Range(0,10,ErrorMessage = "Please insert a number between 0 to 10")]
         [Display(Name = "Restaurant Score")]
-        public int Score { get; set; }            //An Individual rating score by this user 1-10
+        public int Score { get; set; }              //An Individual rating score by this user
 
         [Display(Name = "Short Description")]
         public string? Text { get; set; }           //Optional description of the review
 
         public DateTime DateCreated { get; set; }
 
-        //Linked fields from db
+        //Relations
 
-        public Restaurant Restaurant { get; set; }               //One(Restaurant)-to-Many(Reviews)
+        //One(Restaurant)-to-Many(Reviews)
+        public Restaurant Restaurant { get; set; }
 
+        //One(User)-to-Many(Reviews)
         public ApplicationUser User { get; set; }                          
     }
 }

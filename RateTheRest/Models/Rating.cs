@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,16 +15,24 @@ namespace RateTheRest.Models
         [ForeignKey("Restaurant")]
         public int RatingID { get; set; }
 
-        public float Value { get; set; }            //The calculated value of the restaurant's ratings NumOfVotes\SumOfVotes
+        //The calculated value of the restaurant's ratings SumOfVotes/NumOfVotes
+        [DefaultValue("calcScore()")]
+        public float Score { get; set; }
 
-        public int NumOfVotes { get; set; }         //The number of users who voted (Number of Users in the table below)
+        //Relations
 
-        public int SumOfVotes { get; set; }
+        //One(Restaurant)-to-One(Rating)
+        public virtual Restaurant Restaurant { get; set; }
 
-        //Linked tables from db
+        //The Users who voted
+        //One(Rating)-to-Many(Users)
+        public ICollection<ApplicationUser> Users { get; set; }
 
-        public virtual Restaurant Restaurant { get; set; }                                  //One(Restaurant)-to-One(Rating)
-        
-        public ICollection<ApplicationUser> User { get; set; }         //The Users who voted          //One(Rating)-to-Many(Users)
+        public float calcScore()
+        {
+            if (Restaurant.Reviews == null) return 0;
+            if (Restaurant.Reviews.Count == 0) return 0;
+            return Restaurant.Reviews.Sum(r => r.Score) / Restaurant.Reviews.Count;
+        }
     }
 }

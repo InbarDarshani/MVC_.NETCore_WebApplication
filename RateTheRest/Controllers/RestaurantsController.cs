@@ -36,8 +36,8 @@ namespace RateTheRest.Controllers
                 .Include(r => r.Tags)
                 .Include(r => r.Logo)
                 .Include(r => r.Photos)
-                .Include(r => r.Rating)
-                .Include(r => r.Reviews)
+                .Include(r => r.Rating).ThenInclude(r => r.Users)
+                .Include(r => r.Reviews).ThenInclude(r => r.User)
                 .Include(r => r.Chefs)
                 .ToListAsync());
         }
@@ -53,7 +53,7 @@ namespace RateTheRest.Controllers
                 .Include(r => r.Tags)
                 .Include(r => r.Logo)
                 .Include(r => r.Photos)
-                .Include(r => r.Rating)
+                .Include(r => r.Rating).ThenInclude(r => r.Users)
                 .Include(r => r.Reviews).ThenInclude(r => r.User)
                 .Include(r => r.Chefs)
                 .AsNoTracking()
@@ -82,6 +82,7 @@ namespace RateTheRest.Controllers
             nameof(Restaurant.Description))]
             Restaurant restaurant,
             [Bind(nameof(Location.LocationId),
+            nameof(Location.Country),
             nameof(Location.City),
             nameof(Location.Street),
             nameof(Location.Number))]
@@ -110,7 +111,7 @@ namespace RateTheRest.Controllers
             if (logo != null)
                 restaurant.Logo = UpdateLogo(logo);
             if (photos != null)
-                restaurant.Photos = UpdateImages(photos);
+                restaurant.Photos = UpdatePhotos(photos);
 
             //Update chefs list (nullable)
             if (chefs.Count > 0)
@@ -139,10 +140,9 @@ namespace RateTheRest.Controllers
                 .Include(r => r.Tags)
                 .Include(r => r.Logo)
                 .Include(r => r.Photos)
-                .Include(r => r.Rating)
-                .Include(r => r.Reviews)
+                .Include(r => r.Rating).ThenInclude(r => r.Users)
+                .Include(r => r.Reviews).ThenInclude(r => r.User)
                 .Include(r => r.Chefs)
-                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.RestaurantID == id);
 
             if (restaurant == null) return NotFound();
@@ -160,6 +160,7 @@ namespace RateTheRest.Controllers
             nameof(Restaurant.Description))]
             Restaurant restaurant,
             [Bind(nameof(Location.LocationId),
+            nameof(Location.Country),
             nameof(Location.City),
             nameof(Location.Street),
             nameof(Location.Number))]
@@ -174,15 +175,15 @@ namespace RateTheRest.Controllers
         {
             if (id != restaurant.RestaurantID) return NotFound();
 
-            restaurant = await _dbcontext.Restaurants
+            restaurant = await _dbcontext.Restaurants          //Include db tables
                 .Include(r => r.Location)
                 .Include(r => r.OpeningHours)
                 .Include(r => r.Tags)
                 .Include(r => r.Logo)
                 .Include(r => r.Photos)
-                .Include(r => r.Rating)
-                .Include(r => r.Reviews)
-                .Include(r => r.Chefs).ThenInclude(c => c.Portrait)
+                .Include(r => r.Rating).ThenInclude(r => r.Users)
+                .Include(r => r.Reviews).ThenInclude(r => r.User)
+                .Include(r => r.Chefs)
                 .FirstOrDefaultAsync(m => m.RestaurantID == id);
 
             //Update opening hours (nullable)
@@ -200,11 +201,12 @@ namespace RateTheRest.Controllers
             if (logo != null)
                 restaurant.Logo = UpdateLogo(logo, restaurant.RestaurantID);
             if (photos != null && photos.Count > 0)
-                restaurant.Photos = UpdateImages(photos, restaurant.RestaurantID);
+                restaurant.Photos = UpdatePhotos(photos, restaurant.RestaurantID);
 
             //Update chefs list (nullable)
             if (chefs.Count > 0)
                 restaurant.Chefs = UpdateChefs(chefs, restaurant.RestaurantID);
+
 
             try
             {
@@ -238,8 +240,8 @@ namespace RateTheRest.Controllers
                 .Include(r => r.Tags)
                 .Include(r => r.Logo)
                 .Include(r => r.Photos)
-                .Include(r => r.Rating)
-                .Include(r => r.Reviews)
+                .Include(r => r.Rating).ThenInclude(r => r.Users)
+                .Include(r => r.Reviews).ThenInclude(r => r.User)
                 .Include(r => r.Chefs)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.RestaurantID == id);
@@ -254,14 +256,14 @@ namespace RateTheRest.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var restaurant = await _dbcontext.Restaurants
+            var restaurant = await _dbcontext.Restaurants          //Include db tables
                 .Include(r => r.Location)
                 .Include(r => r.OpeningHours)
                 .Include(r => r.Tags)
                 .Include(r => r.Logo)
                 .Include(r => r.Photos)
-                .Include(r => r.Rating)
-                .Include(r => r.Reviews)
+                .Include(r => r.Rating).ThenInclude(r => r.Users)
+                .Include(r => r.Reviews).ThenInclude(r => r.User)
                 .Include(r => r.Chefs)
                 .FirstOrDefaultAsync(m => m.RestaurantID == id);
 
@@ -288,12 +290,9 @@ namespace RateTheRest.Controllers
             string relativePath = Path.Combine("images", "Restaurants");
             string filename;
             LogoFile uploadedLogo;
-
-            if (logo == null)
-                return new LogoFile();
-
-            //Delete existing logo from db if restaurant exists
-            if (RestaurantExists(restaurantID) && logo != null)
+      
+            //Delete existing or default logo from db if restaurant exists
+            if (RestaurantExists(restaurantID))
             {
                 LogoFile remove = _dbcontext.Logos.Where(l => l.Restaurant.RestaurantID == restaurantID).FirstOrDefault();
                 _dbcontext.Logos.Remove(remove);
@@ -306,21 +305,19 @@ namespace RateTheRest.Controllers
                 logo.CopyTo(stream);
                 uploadedLogo = new LogoFile { Path = Path.Combine("~/", relativePath, filename), FileName = filename };
             }
-
             return uploadedLogo;
         }
 
-        //TOOD: delete existing photos
-        public List<ImageFile> UpdateImages(List<IFormFile> images, int restaurantID = -1)
+        public List<PhotoFile> UpdatePhotos(List<IFormFile> images, int restaurantID = -1)
         {
             string relativePath = Path.Combine("images", "Restaurants");
             string filename;
-            List<ImageFile> uploadedImages = new List<ImageFile>();
+            List<PhotoFile> uploadedImages = new List<PhotoFile>();
             int imageNumber = 1;
 
-            //Check if more photos are added to existing resaurant
+            //Get photo list if retaurant exists
             if (RestaurantExists(restaurantID))
-                uploadedImages = _dbcontext.Images.Where(l => l.Restaurant.RestaurantID == restaurantID).ToList();
+                uploadedImages = _dbcontext.Photos.Where(l => l.Restaurant.RestaurantID == restaurantID).ToList();
 
             //Upload
             foreach (IFormFile i in images)
@@ -329,7 +326,7 @@ namespace RateTheRest.Controllers
                 using (FileStream stream = new FileStream(Path.Combine(_environment.WebRootPath, relativePath, filename), FileMode.Create))
                 {
                     i.CopyTo(stream);
-                    uploadedImages.Add(new ImageFile { Path = Path.Combine("~/", relativePath, filename), FileName = filename });
+                    uploadedImages.Add(new PhotoFile { Path = Path.Combine("~/", relativePath, filename), FileName = filename });
                 }
                 imageNumber++;
             }
@@ -348,6 +345,7 @@ namespace RateTheRest.Controllers
                 _dbcontext.OpeningHours.RemoveRange(remove);
             }
 
+            //Assemble oppening hours
             foreach (string day in GlobalWeek.WEEK)
             {
                 if (checkedDays.Contains(day))
@@ -363,13 +361,13 @@ namespace RateTheRest.Controllers
 
         public List<Tag> UpdateTags(List<string> tagsNames, int restaurantID = -1)
         {
-            List<Tag> tags;
+            List<Tag> tags = new List<Tag>();
 
-            //Chek if clear all required
+            //Check if clear all required
             if (tagsNames.First() == "0")
-                return null;
+                return tags;
 
-            tags = new List<Tag>();
+            //Add tags
             foreach (string t in tagsNames)
                 tags.Add(new Tag() { TagName = t });
             return tags;
@@ -379,22 +377,21 @@ namespace RateTheRest.Controllers
         {
             var chefs = new List<Chef>();
 
-            //Chek if clear all required
+            //Check if clear all required
             if (chefsIds.First() == 0)
                 return null;
-
+            
+            //Add chefs
             foreach (int cId in chefsIds)
             {
                 var chef = _dbcontext.Chefs.Find(cId);
-                chefs.Add(chef);        
+                chefs.Add(chef);
             }
-
             return chefs;
         }
 
         public void DeleteFiles(Restaurant restaurant)
         {
-            //Restaurant restaurant = _dbcontext.Restaurants.Find(restaurantID);
             string direcroty = Path.Combine(_environment.WebRootPath, "images", "Restaurants");
 
             if (restaurant.Logo != null)
@@ -406,7 +403,7 @@ namespace RateTheRest.Controllers
 
             if (restaurant.Photos != null && restaurant.Photos.Count > 0)
             {
-                foreach (ImageFile p in restaurant.Photos)
+                foreach (PhotoFile p in restaurant.Photos)
                 {
                     string photoFile = Path.Combine(direcroty, p.FileName);
                     if (System.IO.File.Exists(photoFile))

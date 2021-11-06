@@ -25,32 +25,49 @@ namespace RateTheRest.Models
 
 		public string? Description { get; set; }
 
-		//Linked tables from db
+		//Relations
 
+		//One(Restaurant)-to-One(Location)
 		[ValidateNever]
-		public virtual Location Location { get; set; }                                                      //One(Restaurant)-to-One(Location)
+		public virtual Location Location { get; set; }
 
+		//One(Restaurant)-to-Many(OpeningHours)
 		[ValidateNever]
 		[Display(Name = "Opening Hours")]
-		public ICollection<OpeningHours>? OpeningHours { get; set; }                                        //One(Restaurant)-to-Many(OpeningHours)
+		public ICollection<OpeningHours> OpeningHours { get; set; } = new List<OpeningHours>()
+		{
+		    new OpeningHours { DayOfWeek = "Sunday", Open = false },
+			new OpeningHours { DayOfWeek = "Monday", Open = false },
+			new OpeningHours { DayOfWeek = "Tuesday", Open = false },
+			new OpeningHours { DayOfWeek = "Wednesday", Open = false },
+			new OpeningHours { DayOfWeek = "Thursday", Open = false },
+			new OpeningHours { DayOfWeek = "Friday", Open = false },
+			new OpeningHours { DayOfWeek = "Saturday", Open = false },
+		};
 
+		//One(Restaurant)-to-Many(Tags)
 		[ValidateNever]
-		public ICollection<Tag>? Tags { get; set; }                 //Vegan, Kosher, etc					//One(Restaurant)-to-Many(Tags)
+		public ICollection<Tag> Tags { get; set; } = new List<Tag>();
 
-		[ValidateNever]
-		[Display(Name = "Rating Score")]   
-		public virtual Rating? Rating { get; set; }                                                         //One(Restaurant)-to-One(Rating)
+        //One(Restaurant)-to-One(Rating)
+        [ValidateNever]
+        [Display(Name = "Rating Score")]
+        public virtual Rating Rating { get; set; } = new Rating() { Score = 0, Users = new List<ApplicationUser>() };
 
-		[ValidateNever]
-		public ICollection<Review>? Reviews { get; set; }                                                   //One(Restaurant)-to-Many(Reviews)
+        //One(Restaurant)-to-Many(Reviews)
+        [ValidateNever]
+		public ICollection<Review> Reviews { get; set; } = new List<Review>();
 
+		//One(Restaurant)-to-One(Logo)
 		[ValidateNever]
-		public LogoFile? Logo { get; set; }								//Restaurant's logo image paths     //One(Restaurant)-to-One(Logo)
+		public LogoFile? Logo { get; set; } = new LogoFile { FileName = "Restaurant_Empty_Logo.png", Path = "~/images/Restaurant_Empty_Logo.png" };
 
+		//One(Restaurant)-to-Many(Images)
 		[ValidateNever]
-		public ICollection<ImageFile>? Photos { get; set; }             //Restaurant's images paths         //One(Restaurant)-to-Many(Images)
+		public ICollection<PhotoFile>? Photos { get; set; } = new List<PhotoFile>();
 
+		//Many(Restaurants)-to-Many(Chefs)
 		[ValidateNever]
-		public virtual ICollection<Chef>? Chefs { get; set; }                                                //Many(Restaurants)-to-Many(Chefs)
+		public virtual ICollection<Chef>? Chefs { get; set; }
 	}
 }

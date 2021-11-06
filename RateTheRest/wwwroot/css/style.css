@@ -22,7 +22,7 @@ html, body {
 }
 
 #home {
-    background-image: url(img/major.png);
+    background-image: url(images/Cover.png);
     background-position: center center;
     background-attachment: fixed;
     background-size: cover;

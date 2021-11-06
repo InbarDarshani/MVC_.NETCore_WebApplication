@@ -18,12 +18,9 @@ namespace RateTheRest.Additional
         [Range(0, int.MaxValue, ErrorMessage = "Please enter valid Number")]
         public int Number { get; set; }
 
-        //Linked tables from db
+        //Relations
 
-        public virtual Restaurant Restaurant { get; set; }              //One(Restaurant)-to-One(Location)
-
-        //public string? Description { get; set; }
-        //public double? Latitude { get; set; }
-        //public double? Longitude { get; set; }
+        //One(Restaurant)-to-One(Location)
+        public virtual Restaurant Restaurant { get; set; }              
     }
 }

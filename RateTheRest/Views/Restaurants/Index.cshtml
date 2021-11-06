@@ -13,10 +13,13 @@
     <thead>
         <tr>
             <th>
+                @Html.DisplayNameFor(model => model.Logo)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Logo)
+                @Html.DisplayNameFor(model => model.Chefs)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Location)
@@ -38,24 +41,42 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
                     @if (item.Logo != null)
                     {
-                        <img src="@Url.Content(item.Logo.Path)" alt="Logo" class="img-thumbnail" width="100" height="100">
+                        <a asp-action="Details" asp-route-id="@item.RestaurantID">
+                            <img src="@Url.Content(item.Logo.Path)" alt="Logo" class="img-thumbnail" width="100" height="100">
+                        </a>
                     }
                 </td>
 
                 <td>
-                    @Html.DisplayFor(modelItem => item.Location.Number) 
-                    @Html.DisplayFor(modelItem => item.Location.Street)  st, 
-                    @Html.DisplayFor(modelItem => item.Location.City), 
+                    <a asp-action="Details" asp-route-id="@item.RestaurantID">
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </a>
+                </td>
+
+                <td>
+                    @if (item.Chefs != null && item.Chefs.Count > 0)
+                    {
+                        <ul>
+                            @foreach (Chef t in item.Chefs)
+                            {
+                                <li> @t.FirstName @t.LastName </li>
+                            }
+                        </ul>
+                    }
+                </td>
+
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Location.Number)
+                    @Html.DisplayFor(modelItem => item.Location.Street)  st,
+                    @Html.DisplayFor(modelItem => item.Location.City),
                     @Html.DisplayFor(modelItem => item.Location.Country)
                 </td>
 
                 <td>
-                    @if (item.Tags != null && item.Tags.Count > 0)
+                    @if (item.Tags.Count > 0)
                     {
                         <ul>
                             @foreach (Tag t in item.Tags)
@@ -67,24 +88,22 @@
                 </td>
 
                 <td>
-                    @if (item.OpeningHours != null && item.OpeningHours.Count > 0)
-                    {
-                        <ul>
-                            @foreach (OpeningHours day in item.OpeningHours)
+                    <ul>
+                        @foreach (OpeningHours day in item.OpeningHours)
+                        {
+                            @if (day.Open)
                             {
-                                @if (day.Open)
-                                {
-                                    <li>
-                                        @day.DayOfWeek: @day.From.GetValueOrDefault().ToString("HH:mm")-@day.To.GetValueOrDefault().ToString("HH:mm")
-                                    </li>
-                                }
+                                <li>
+                                    @day.DayOfWeek: @day.From.GetValueOrDefault().ToString("HH:mm")-@day.To.GetValueOrDefault().ToString("HH:mm")
+                                </li>
                             }
-                        </ul>
-                    }
+                        }
+                    </ul>
+
                 </td>
 
                 <td>
-                    @Html.DisplayFor(modelItem => item.Rating)
+                    @Html.DisplayFor(modelItem => item.Rating.Score)
                 </td>
 
                 <td>

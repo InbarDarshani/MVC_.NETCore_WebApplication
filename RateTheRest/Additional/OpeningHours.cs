@@ -22,8 +22,9 @@ namespace RateTheRest.Additional
         public DateTime? From { get; set; }
 		public DateTime? To { get; set; }
 
-		//Linked tables from db
+        //Relations
 
-		public Restaurant Restaurant { get; set; }              //One(Restaurant)-to-Many(OpeningHours)
+        //One(Restaurant)-to-Many(OpeningHours)
+        public Restaurant Restaurant { get; set; }              
 	}
 }
