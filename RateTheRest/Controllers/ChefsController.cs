@@ -111,20 +111,24 @@ namespace RateTheRest.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id,
-            [Bind(nameof(Chef.ChefID),
-            nameof(Chef.FirstName),
-            nameof(Chef.LastName),
-            nameof(Chef.Description))]
-            Chef chef,
+            string FirstName, string LastName, string Description,
             IFormFile portrait,
             List<int> restaurants)
         {
-            if (id != chef.ChefID) return NotFound();
+            if (!ChefExists(id)) return NotFound();
 
-            chef = await _dbcontext.Chefs
+            Chef chef = await _dbcontext.Chefs
                 .Include(c => c.Portrait)
                 .Include(c => c.Restaurants)
                 .FirstOrDefaultAsync(m => m.ChefID == id);
+
+            //Update properties
+            if (FirstName != null)
+                chef.FirstName = FirstName;           
+            if (LastName != null)
+                chef.LastName = LastName;
+            if (Description != null)
+                chef.Description = Description;
 
             //Upload and update portrait photo (nullable)
             if (portrait != null)

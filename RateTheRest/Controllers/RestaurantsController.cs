@@ -28,9 +28,9 @@ namespace RateTheRest.Controllers
         //_____________________________________________Actions Functions___________________________________________________________________________________
 
         // GET: Restaurants
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchByName, string searchByTag, string searchByChefName, string groupByTag, string sortByRating)
         {
-            return View(await _dbcontext.Restaurants
+            IEnumerable<Restaurant> restaurants = _dbcontext.Restaurants
                 .Include(r => r.Location)
                 .Include(r => r.OpeningHours)
                 .Include(r => r.Tags)
@@ -39,7 +39,30 @@ namespace RateTheRest.Controllers
                 .Include(r => r.Rating).ThenInclude(r => r.Users)
                 .Include(r => r.Reviews).ThenInclude(r => r.User)
                 .Include(r => r.Chefs)
-                .ToListAsync());
+                .ToList();
+                    
+
+            if (!String.IsNullOrEmpty(searchByName))
+            {
+                restaurants = from r in restaurants
+                              where r.Name.Contains(searchByName)
+                              select r;
+            }
+
+            if (!String.IsNullOrEmpty(searchByTag))
+            {
+                restaurants = from t in _dbcontext.Tags
+                              where t.TagName.Contains(searchByTag)
+                              select t.Restaurant;
+            }
+
+            if (!String.IsNullOrEmpty(searchByChefName))
+            {
+
+            }
+
+
+            return View(restaurants);
         }
 
         // GET: Restaurants/Details/5
@@ -155,10 +178,7 @@ namespace RateTheRest.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id,
-            [Bind(nameof(Restaurant.RestaurantID),
-            nameof(Restaurant.Name),
-            nameof(Restaurant.Description))]
-            Restaurant restaurant,
+            string Name, string Description,
             [Bind(nameof(Location.LocationId),
             nameof(Location.Country),
             nameof(Location.City),
@@ -173,9 +193,9 @@ namespace RateTheRest.Controllers
             List<IFormFile> photos,
             List<int> chefs)
         {
-            if (id != restaurant.RestaurantID) return NotFound();
+            if (!RestaurantExists(id)) return NotFound();
 
-            restaurant = await _dbcontext.Restaurants          //Include db tables
+            Restaurant restaurant = await _dbcontext.Restaurants          //Include db tables
                 .Include(r => r.Location)
                 .Include(r => r.OpeningHours)
                 .Include(r => r.Tags)
@@ -185,6 +205,12 @@ namespace RateTheRest.Controllers
                 .Include(r => r.Reviews).ThenInclude(r => r.User)
                 .Include(r => r.Chefs)
                 .FirstOrDefaultAsync(m => m.RestaurantID == id);
+
+            //Update properties
+            if (Name != null)           
+                restaurant.Name = Name;
+            if (Description != null)
+                restaurant.Description = Description;
 
             //Update opening hours (nullable)
             if (days.Count > 0 && from.Count > 0 && to.Count > 0)
@@ -206,7 +232,6 @@ namespace RateTheRest.Controllers
             //Update chefs list (nullable)
             if (chefs.Count > 0)
                 restaurant.Chefs = UpdateChefs(chefs, restaurant.RestaurantID);
-
 
             try
             {
@@ -290,7 +315,7 @@ namespace RateTheRest.Controllers
             string relativePath = Path.Combine("images", "Restaurants");
             string filename;
             LogoFile uploadedLogo;
-      
+
             //Delete existing or default logo from db if restaurant exists
             if (RestaurantExists(restaurantID))
             {
@@ -380,7 +405,7 @@ namespace RateTheRest.Controllers
             //Check if clear all required
             if (chefsIds.First() == 0)
                 return null;
-            
+
             //Add chefs
             foreach (int cId in chefsIds)
             {
