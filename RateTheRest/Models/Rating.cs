@@ -16,7 +16,7 @@ namespace RateTheRest.Models
         public int RatingID { get; set; }
 
         //The calculated value of the restaurant's ratings SumOfVotes/NumOfVotes
-        [DefaultValue("getScore()")]
+        [DefaultValue("calcScore()")]
         public float Score { get; set; }
 
         //Relations
@@ -26,13 +26,13 @@ namespace RateTheRest.Models
 
         //The Users who voted
         //One(Rating)-to-Many(Users)
-        public ICollection<ApplicationUser> Users { get; set; } = new List<ApplicationUser>();
+        public ICollection<ApplicationUser> Users { get; set; }
 
-        public float getScore()
+        public float calcScore()
         {
-            if (Restaurant.Reviews == null || Users == null) return 0;
-            if (Restaurant.Reviews.Count == 0 || Users.Count == 0) return 0;
-            return Restaurant.Reviews.Sum(r => r.Score) / Users.Count;
+            if (Restaurant.Reviews == null) return 0;
+            if (Restaurant.Reviews.Count == 0) return 0;
+            return Restaurant.Reviews.Sum(r => r.Score) / Restaurant.Reviews.Count;
         }
     }
 }

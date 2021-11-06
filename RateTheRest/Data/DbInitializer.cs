@@ -85,6 +85,45 @@ namespace RateTheRest.Data
             };
             foreach (ApplicationUser u in users) { context.Users.Add(u); }
             context.SaveChanges();
+
+
+            foreach (Restaurant restaurant in restaurants)
+            {
+                var rand = new Random();
+                for (int i = 0; i < rand.Next(20,50); i++)
+                {
+                    createReview(new Review(), rand.Next(0,10), restaurant.RestaurantID, "Basic@walla.com");
+                }
+            }
+            context.SaveChanges();
+
+            void createReview(Review review, int score, int restaurantId, string username)
+            {
+                review.DateCreated = DateTime.Now;
+                review.Score = score;
+                review.Restaurant = context.Restaurants          //Include db tables
+                    .Include(r => r.Location)
+                    .Include(r => r.OpeningHours)
+                    .Include(r => r.Tags)
+                    .Include(r => r.Logo)
+                    .Include(r => r.Photos)
+                    .Include(r => r.Rating).ThenInclude(r => r.Users)
+                    .Include(r => r.Reviews).ThenInclude(r => r.User)
+                    .Include(r => r.Chefs)
+                    .FirstOrDefault(m => m.RestaurantID == restaurantId);
+                review.User = context.Users
+                    .Include(u => u.Rating).ThenInclude(r => r.Restaurant)
+                    .FirstOrDefault(u => u.UserName == username);
+
+                context.Add(review);
+                context.SaveChanges();
+
+                //Update Retaurant's Rating
+                review.Restaurant.Rating.Users.Add(review.User);
+                review.Restaurant.Rating.Score = review.Restaurant.Rating.calcScore();
+                context.SaveChanges();
+            }
         }
     }
 }
+

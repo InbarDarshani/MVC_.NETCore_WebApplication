@@ -93,11 +93,13 @@ namespace RateTheRest.Controllers
             review.User = _dbcontext.Users
                 .Include(u => u.Rating).ThenInclude(r => r.Restaurant)
                 .FirstOrDefault(u => u.UserName == User.Identity.Name);
+
+            _dbcontext.Add(review);
+            await _dbcontext.SaveChangesAsync();
         
             //Update Retaurant's Rating
             review.Restaurant.Rating.Users.Add(review.User);
-
-            _dbcontext.Add(review);
+            review.Restaurant.Rating.Score = review.Restaurant.Rating.calcScore();
             await _dbcontext.SaveChangesAsync();
 
             return RedirectToAction("Details", "Restaurants", new { id = restaurantId });
@@ -116,11 +118,14 @@ namespace RateTheRest.Controllers
                 .Include(r => r.User)
                 .FirstOrDefaultAsync(m => m.ReviewID == id);
 
-            //Update Retaurant's Rating
-            review.Restaurant.Rating.Users.Remove(review.User);
-
             _dbcontext.Reviews.Remove(review);
             await _dbcontext.SaveChangesAsync();
+
+            //Update Retaurant's Rating
+            review.Restaurant.Rating.Users.Remove(review.User);
+            review.Restaurant.Rating.Score = review.Restaurant.Rating.calcScore();
+            await _dbcontext.SaveChangesAsync();
+
             return RedirectToAction("Index", new { username = User.Identity.Name });
         }
         //_________________________________________________________________________________________________________________________________________________

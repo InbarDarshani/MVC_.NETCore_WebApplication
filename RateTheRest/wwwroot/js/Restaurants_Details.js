@@ -18,3 +18,17 @@ $(document).ready(function () {
         })
     });
 })
+
+//Weather
+const city = $(".weather")[0].getAttribute("city")
+$.ajax({
+    url: 'http://api.weatherstack.com/current',
+    data: {
+        access_key: 'd0fb22bfd7cc353225d7c6126a89631b',
+        query: city
+    },
+    dataType: 'json',
+    success: function (apiResponse) {
+        $(".weather").html(`Current temperature in ${apiResponse.location.name} is ${apiResponse.current.temperature}℃`);
+    }
+});

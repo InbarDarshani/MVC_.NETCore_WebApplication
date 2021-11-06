@@ -1,10 +1,17 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
     var top5RatedRestaurants = (Restaurant[])ViewData["Top5RatedRestaurants"];
+    var restaurants = (Restaurant[])ViewData["RestaurantsByNumberOfReviews"];
 }
 
+<script defer type="module" src="~/js/HomePage.js"></script>
 <link rel="stylesheet" href="~/css/HomePage.css">
-@*<script src="~/js/HomePage.js"></script>*@
+
+@*restaurant data for js*@
+@foreach (Restaurant r in restaurants)
+{
+    <div class="restaurants" name="@r.Name" numOfReviews="@r.Reviews.Count" ratingScore="@r.Rating.Score"></div>
+}
 
 <!--landing page start-->
 <div id="home">
@@ -28,7 +35,7 @@
             <div class="col-sm-4">
                 <img src="@Url.Content(top5RatedRestaurants[0].Logo.Path)" class="img-fluid">
                 <h3 class="">@top5RatedRestaurants[0].Name</h3>
-                <label>ADD DETAILS</label>
+                <div>ADD DETAILS</div>
 
                 <a href="@Url.Action("Details", "Restaurants", new { id = top5RatedRestaurants[0].RestaurantID })" class="btn btn-md">View More</a>
             </div>
@@ -36,14 +43,16 @@
             <div class="col-sm-4">
                 <img src="@Url.Content(top5RatedRestaurants[1].Logo.Path)" class="img-fluid">
                 <h3 class="">@top5RatedRestaurants[1].Name</h3>
-                <label>ADD DETAILS</label>
+                <div>ADD DETAILS</div>
+
                 <a href="@Url.Action("Details", "Restaurants", new { id = top5RatedRestaurants[1].RestaurantID })" class="btn btn-md">View More</a>
             </div>
 
             <div class="col-sm-4">
                 <img src="@Url.Content(top5RatedRestaurants[2].Logo.Path)" class="img-fluid">
                 <h3 class="">@top5RatedRestaurants[2].Name</h3>
-                <label>ADD DETAILS</label>
+                <div>ADD DETAILS</div>
+
                 <a href="@Url.Action("Details", "Restaurants", new { id = top5RatedRestaurants[2].RestaurantID })" class="btn btn-md">View More</a>
             </div>
         </div>
@@ -52,13 +61,15 @@
             <div class="col-sm-6">
                 <img src="@Url.Content(top5RatedRestaurants[3].Logo.Path)" class="img-fluid">
                 <h3 class="">@top5RatedRestaurants[3].Name</h3>
-                <label>ADD DETAILS</label>
+                <div>ADD DETAILS</div>
+
                 <a href="@Url.Action("Details", "Restaurants", new { id = top5RatedRestaurants[3].RestaurantID })" class="btn btn-md">View More</a>
             </div>
             <div class="col-sm-6">
                 <img src="@Url.Content(top5RatedRestaurants[4].Logo.Path)" class="img-fluid">
                 <h3 class="">@top5RatedRestaurants[4].Name</h3>
-                <label>ADD DETAILS</label>
+                <div>ADD DETAILS</div>
+
                 <a href="@Url.Action("Details", "Restaurants", new { id = top5RatedRestaurants[4].RestaurantID })" class="btn btn-md">View More</a>
             </div>
         </div>
@@ -66,3 +77,11 @@
     </div>
 </div>
 <!--Top 5 Rated Restaurants end-->
+<!--Restaurants by number of reviews starts-->
+<h1>Restaurants By number Of Reviews</h1>
+<div id="pieChartRestaurantsByNumberOfReviews"></div>
+<!--Restaurants by number of reviews end-->
+<!--Restaurants by rating score starts-->
+<h1>Restaurants By Rating</h1>
+<div id="barChartRestaurantsByRatingScore"></div>
+<!--Restaurants by rating score ends-->

@@ -21,9 +21,7 @@ namespace RateTheRest.Controllers
 
         public IActionResult Index()
         {
-            //Restaurant[] Top5RatedRestaurants = _dbcontext.Restaurants.OrderByDescending(r => r.Rating.Score).Take(5).ToArray();
-
-            ViewData["Top5RatedRestaurants"] =  _dbcontext.Restaurants
+            ViewData["Top5RatedRestaurants"] = _dbcontext.Restaurants
                  .Include(r => r.Location)
                 .Include(r => r.OpeningHours)
                 .Include(r => r.Tags)
@@ -33,6 +31,10 @@ namespace RateTheRest.Controllers
                 .Include(r => r.Reviews).ThenInclude(r => r.User)
                 .Include(r => r.Chefs)
                 .OrderByDescending(r => r.Rating.Score).Take(5).ToArray();
+
+            ViewData["RestaurantsByNumberOfReviews"] = _dbcontext.Restaurants
+                .Include(r => r.Reviews).ThenInclude(r => r.User).ToArray();
+
             return View();
         }
 
