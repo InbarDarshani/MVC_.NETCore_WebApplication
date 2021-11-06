@@ -24,13 +24,47 @@ namespace RateTheRest.Controllers
         //_____________________________________________Actions Functions___________________________________________________________________________________
 
         // GET: Chefs
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(List<string> searchString, List<string> searchBy)
         {
-            return View(await _dbcontext.Chefs
+            IEnumerable<Chef> chefs = _dbcontext.Chefs
                 .Include(c => c.Portrait)
                 .Include(c => c.Restaurants).ThenInclude(r => r.Rating).ThenInclude(r => r.Users)
                 .Include(c => c.Restaurants).ThenInclude(r => r.Reviews)
-                .ToListAsync());
+                .ToList();
+
+            //Perform search
+            IEnumerable<(string searchBy, string searchString)> filters = searchBy.Zip(searchString, (s1, s2) => (s1, s2));
+            foreach (var sb in filters)
+            {
+                if (!string.IsNullOrEmpty(sb.searchString))
+                {
+                    switch (sb.searchBy)
+                    {
+                        case "Name":
+                            {
+                                chefs = from c in chefs
+                                        where c.FirstName.Contains(sb.searchString) || c.LastName.Contains(sb.searchString)
+                                        select c;
+                                break;
+                            }
+                        case "Restaurant":
+                            {
+                                chefs = from c in chefs
+                                        where c.Restaurants.Any(r => r.Name.Contains(sb.searchString))
+                                        select c;
+                                break;
+                            }
+                        default:
+                            break;
+                    }
+                }
+            }
+
+            if (searchString.Count > 0)
+                ViewData["FiltersPlaceHolders"] = searchString.ToArray();
+            else
+                ViewData["FiltersPlaceHolders"] = new string[2];
+            return View(chefs);
         }
         //_________________________________________________________
 
