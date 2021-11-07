@@ -32,14 +32,13 @@ namespace RateTheRest.Controllers
                 .Include(r => r.Chefs)
                 .OrderByDescending(r => r.Rating.Score).Take(5).ToArray();
 
-            ViewData["RestaurantsByNumberOfReviews"] = _dbcontext.Restaurants
+            ViewData["RestaurantsAndReviews"] = _dbcontext.Restaurants
                 .Include(r => r.Reviews).ThenInclude(r => r.User).ToArray();
 
-            return View();
-        }
-
-        public IActionResult Privacy()
-        {
+            var query = from t in _dbcontext.Tags.Include(t => t.Restaurant).ToList()
+                         group t.Restaurant by t.TagName into groupedTags
+                         select new { tag = groupedTags.Key, restaurants = groupedTags.ToList() };
+            ViewData["RestaurantsGroupedByTags"] = query.ToList();
             return View();
         }
 

@@ -4,7 +4,7 @@ import * as d3 from "https://cdn.skypack.dev/d3@7";
 
 const restaurants = document.querySelectorAll(".restaurants");
 
-//https://observablehq.com/@d3/pie-chart
+// from https://observablehq.com/@d3/pie-chart
 var restaurantsByNumberOfReviews = [...restaurants].map(e => ({ name: e.getAttribute("name"), value: e.getAttribute("numOfReviews") }));
 restaurantsByNumberOfReviews.columns = ["name", "value"];
 var pieChart = PieChart(restaurantsByNumberOfReviews, {
@@ -15,7 +15,7 @@ var pieChart = PieChart(restaurantsByNumberOfReviews, {
 });
 document.querySelector("#pieChartRestaurantsByNumberOfReviews").appendChild(pieChart);
 
-//https://observablehq.com/@d3/bar-chart
+//from https://observablehq.com/@d3/bar-chart
 var restaurantsByRatingScore = [...restaurants].map(e => ({ name: e.getAttribute("name"), value: e.getAttribute("ratingScore") }));
 restaurantsByRatingScore.columns = ["name", "value"];
 var barChart = BarChart(restaurantsByRatingScore, {
