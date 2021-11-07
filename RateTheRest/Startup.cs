@@ -34,7 +34,7 @@ namespace RateTheRest
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             //Add sqlite for macs
-            services.AddDbContext<ApplicationContext>(options => options.UseSqlite(Configuration.GetConnectionString("DefaultConnectionMac")));
+            //services.AddDbContext<ApplicationContext>(options => options.UseSqlite(Configuration.GetConnectionString("DefaultConnectionMac")));
 
             //To be able to view exceptions on db
             services.AddDatabaseDeveloperPageExceptionFilter();

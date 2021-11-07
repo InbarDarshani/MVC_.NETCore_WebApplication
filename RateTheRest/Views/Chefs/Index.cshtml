@@ -19,7 +19,6 @@
         </thead>
         <tbody>
             <tr>
-
                 <td></td>
                 <td>
                     <p>
@@ -72,14 +71,14 @@
                 <td>
                     @if (item.Portrait != null)
                     {
-                        <a asp-action="Details" asp-route-id="@item.ChefID">
+                        <a href="/Restaurants/Details/@item.ChefID">
                             <img src="@Url.Content(item.Portrait.Path)" alt="Logo" class="img-thumbnail" width="100" height="100">
                         </a>
                     }
                 </td>
 
                 <td>
-                    <a asp-action="Details" asp-route-id="@item.ChefID">
+                    <a href="/Restaurants/Details/@item.ChefID">
                         @Html.DisplayFor(modelItem => item.FirstName) @Html.DisplayFor(modelItem => item.LastName)
                     </a>
                 </td>
@@ -91,12 +90,12 @@
                 <td>
                     @if (item.Restaurants != null || item.Restaurants.Count > 0)
                     {
-                        <ul>
-                            @foreach (Restaurant r in item.Restaurants)
-                            {
-                                <li> @r.Name </li>
-                            }
-                        </ul>
+                    <ul>
+                        @foreach (Restaurant r in item.Restaurants)
+                        {
+                            <li><a href="/Restaurants/Details/@r.RestaurantID">@r.Name</a></li>
+                        }
+                    </ul>
                     }
                 </td>
 

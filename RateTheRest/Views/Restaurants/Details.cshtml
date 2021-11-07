@@ -108,7 +108,7 @@
                 <ul>
                     @foreach (Chef c in Model.Chefs)
                     {
-                        <li> @c.FirstName @c.LastName </li>
+                        <li><a href="/Chefs/Details/@c.ChefID">@c.FirstName @c.LastName</a></li>
                     }
                 </ul>
             </dd>

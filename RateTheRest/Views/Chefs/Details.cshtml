@@ -52,7 +52,7 @@
                 <ul>
                     @foreach (Restaurant r in Model.Restaurants)
                     {
-                        <li>@r.Name</li>
+                        <li><a href="/Restaurants/Details/@r.RestaurantID">@r.Name</a></li>
                     }
                 </ul>
             </dd>

@@ -86,15 +86,73 @@ namespace RateTheRest.Data
             foreach (ApplicationUser u in users) { context.Users.Add(u); }
             context.SaveChanges();
 
-
+            //Create reviews with random score
             foreach (Restaurant restaurant in restaurants)
             {
                 var rand = new Random();
-                for (int i = 0; i < rand.Next(20,50); i++)
+                for (int i = 0; i < rand.Next(20, 50); i++)
                 {
-                    createReview(new Review(), rand.Next(0,10), restaurant.RestaurantID, "Basic@walla.com");
+                    createReview(new Review(), rand.Next(0, 10), restaurant.RestaurantID, "Basic@walla.com");
                 }
             }
+
+            //Update chefs for each restaurant
+            restaurants[0].Chefs.Add(chefs[1]);
+            restaurants[1].Chefs.Add(chefs[1]);
+            restaurants[2].Chefs.Add(chefs[2]);
+            restaurants[3].Chefs.Add(chefs[3]);
+            restaurants[4].Chefs.Add(chefs[3]);
+            restaurants[5].Chefs.Add(chefs[3]);
+            restaurants[6].Chefs.Add(chefs[3]);
+            restaurants[7].Chefs.Add(chefs[3]);
+
+            //set restaurants logos
+            restaurants[0].Logo = new LogoFile { FileName = "Logo", Path = "~/dbInitialize/Malka/logo.jpg" };
+            restaurants[1].Logo = new LogoFile { FileName = "Logo", Path = "~/dbInitialize/Miznon/logo.jpg" };
+            restaurants[2].Logo = new LogoFile { FileName = "Logo", Path = "~/dbInitialize/Dunya/logo.jpg" };
+            restaurants[3].Logo = new LogoFile { FileName = "Logo", Path = "~/dbInitialize/Machneyuda/logo.jpg" };
+            restaurants[4].Logo = new LogoFile { FileName = "Logo", Path = "~/dbInitialize/Yudale/logo.jpg" };
+            restaurants[5].Logo = new LogoFile { FileName = "Logo", Path = "~/dbInitialize/Hasadna/logo.jpg" };
+            restaurants[6].Logo = new LogoFile { FileName = "Logo", Path = "~/dbInitialize/The Palomar/logo.jpg" };
+            restaurants[7].Logo = new LogoFile { FileName = "Logo", Path = "~/dbInitialize/Shabour/logo.jpg" };
+
+            //set restaurant photos
+            restaurants[0].Photos.Add(new PhotoFile { FileName = "Photo", Path = "~/dbInitialize/Malka/1.jpg" });
+            restaurants[0].Photos.Add(new PhotoFile { FileName = "Photo", Path = "~/dbInitialize/Malka/2.jpg" });
+            restaurants[0].Photos.Add(new PhotoFile { FileName = "Photo", Path = "~/dbInitialize/Malka/3.jpg" });
+            restaurants[1].Photos.Add(new PhotoFile { FileName = "Photo", Path = "~/dbInitialize/Miznon/1.jpg" });
+            restaurants[1].Photos.Add(new PhotoFile { FileName = "Photo", Path = "~/dbInitialize/Miznon/2.jpg" });
+            restaurants[1].Photos.Add(new PhotoFile { FileName = "Photo", Path = "~/dbInitialize/Miznon/3.jpg" });
+            restaurants[1].Photos.Add(new PhotoFile { FileName = "Photo", Path = "~/dbInitialize/Miznon/4.jpg" });
+            restaurants[2].Photos.Add(new PhotoFile { FileName = "Photo", Path = "~/dbInitialize/Dunya/1.jpg" });
+            restaurants[2].Photos.Add(new PhotoFile { FileName = "Photo", Path = "~/dbInitialize/Dunya/2.jpg" });
+            restaurants[2].Photos.Add(new PhotoFile { FileName = "Photo", Path = "~/dbInitialize/Dunya/3.jpg" });
+            restaurants[2].Photos.Add(new PhotoFile { FileName = "Photo", Path = "~/dbInitialize/Dunya/4.jpg" });
+            restaurants[3].Photos.Add(new PhotoFile { FileName = "Photo", Path = "~/dbInitialize/Machneyuda/1.jpg" });
+            restaurants[3].Photos.Add(new PhotoFile { FileName = "Photo", Path = "~/dbInitialize/Machneyuda/2.jpg" });
+            restaurants[3].Photos.Add(new PhotoFile { FileName = "Photo", Path = "~/dbInitialize/Machneyuda/3.jpg" });
+            restaurants[4].Photos.Add(new PhotoFile { FileName = "Photo", Path = "~/dbInitialize/Yudale/1.jpg" });
+            restaurants[4].Photos.Add(new PhotoFile { FileName = "Photo", Path = "~/dbInitialize/Yudale/2.jpg" });
+            restaurants[5].Photos.Add(new PhotoFile { FileName = "Photo", Path = "~/dbInitialize/Hasadna/1.jpg" });
+            restaurants[5].Photos.Add(new PhotoFile { FileName = "Photo", Path = "~/dbInitialize/Hasadna/2.jpg" });
+            restaurants[5].Photos.Add(new PhotoFile { FileName = "Photo", Path = "~/dbInitialize/Hasadna/3.jpg" });
+            restaurants[5].Photos.Add(new PhotoFile { FileName = "Photo", Path = "~/dbInitialize/Hasadna/4.jpg" });
+            restaurants[6].Photos.Add(new PhotoFile { FileName = "Photo", Path = "~/dbInitialize/The Palomar/1.jpg" });
+            restaurants[6].Photos.Add(new PhotoFile { FileName = "Photo", Path = "~/dbInitialize/The Palomar/2.jpg" });
+            restaurants[6].Photos.Add(new PhotoFile { FileName = "Photo", Path = "~/dbInitialize/The Palomar/3.jpg" });
+            restaurants[6].Photos.Add(new PhotoFile { FileName = "Photo", Path = "~/dbInitialize/The Palomar/4.jpg" });
+            restaurants[7].Photos.Add(new PhotoFile { FileName = "Photo", Path = "~/dbInitialize/Shabour/1.jpg" });
+            restaurants[7].Photos.Add(new PhotoFile { FileName = "Photo", Path = "~/dbInitialize/Shabour/2.jpg" });
+            restaurants[7].Photos.Add(new PhotoFile { FileName = "Photo", Path = "~/dbInitialize/Shabour/3.jpg" });
+            restaurants[7].Photos.Add(new PhotoFile { FileName = "Photo", Path = "~/dbInitialize/Shabour/4.jpg" });
+
+            //set chefs portraits
+            chefs[0].Portrait = new PortraitFile { FileName = "Portrait", Path = "~/dbInitialize/Chefs/IsraelAharoni.jpg" };
+            chefs[1].Portrait = new PortraitFile { FileName = "Portrait", Path = "~/dbInitialize/Chefs/EyalShani.jpg" };
+            chefs[2].Portrait = new PortraitFile { FileName = "Portrait", Path = "~/dbInitialize/Chefs/MeirAdoni.jpg" };
+            chefs[3].Portrait = new PortraitFile { FileName = "Portrait", Path = "~/dbInitialize/Chefs/AssafGranit.jpg" };
+            chefs[4].Portrait = new PortraitFile { FileName = "Portrait", Path = "~/dbInitialize/Chefs/MoshikRoth.jpg" };
+                                                                                                        
             context.SaveChanges();
 
             void createReview(Review review, int score, int restaurantId, string username)
