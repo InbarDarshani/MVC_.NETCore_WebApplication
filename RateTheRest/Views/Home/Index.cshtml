@@ -2,80 +2,79 @@
     ViewData["Title"] = "Home Page";
     var top5RatedRestaurants = (Restaurant[])ViewData["Top5RatedRestaurants"];
     var restaurantsAndReviews = (Restaurant[])ViewData["RestaurantsAndReviews"];
-    
+    var restaurantsGroupedByTags = ViewData["RestaurantsGroupedByTags"];
 }
 
 <script defer type="module" src="~/js/HomePage.js"></script>
 <link rel="stylesheet" href="~/css/HomePage.css">
 
-<h1>Welcome To RateTheRest</h1>
+<div class="container">
 
-<!--Top 5 Rated Restaurants start-->
-<div class="row top-heading mt-5">
-    <div class="col-md-12">
-        <p>Top 5 Ratet Restaurants</p>
+    <h1>Welcome To RateTheRest</h1>
+
+    <!--Top 5 Rated Restaurants start-->
+    <div class="row top-heading mt-5">
+        <div class="col-md-12">
+            <p>Top 5 Rated Restaurants</p>
+        </div>
     </div>
+
+    <div class="row mt-4">
+        <div class="col-sm-4">
+            <img src="@Url.Content(top5RatedRestaurants[0].Logo.Path)" class="img-fluid">
+            <h3 class="">@top5RatedRestaurants[0].Name</h3>
+            <div>ADD DETAILS</div>
+
+            <a href="@Url.Action("Details", "Restaurants", new { id = top5RatedRestaurants[0].RestaurantID })" class="btn btn-md">View More</a>
+        </div>
+
+        <div class="col-sm-4">
+            <img src="@Url.Content(top5RatedRestaurants[1].Logo.Path)" class="img-fluid">
+            <h3 class="">@top5RatedRestaurants[1].Name</h3>
+            <div>ADD DETAILS</div>
+
+            <a href="@Url.Action("Details", "Restaurants", new { id = top5RatedRestaurants[1].RestaurantID })" class="btn btn-md">View More</a>
+        </div>
+
+        <div class="col-sm-4">
+            <img src="@Url.Content(top5RatedRestaurants[2].Logo.Path)" class="img-fluid">
+            <h3 class="">@top5RatedRestaurants[2].Name</h3>
+            <div>ADD DETAILS</div>
+
+            <a href="@Url.Action("Details", "Restaurants", new { id = top5RatedRestaurants[2].RestaurantID })" class="btn btn-md">View More</a>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-sm-6">
+            <img src="@Url.Content(top5RatedRestaurants[3].Logo.Path)" class="img-fluid">
+            <h3 class="">@top5RatedRestaurants[3].Name</h3>
+            <div>ADD DETAILS</div>
+
+            <a href="@Url.Action("Details", "Restaurants", new { id = top5RatedRestaurants[3].RestaurantID })" class="btn btn-md">View More</a>
+        </div>
+        <div class="col-sm-6">
+            <img src="@Url.Content(top5RatedRestaurants[4].Logo.Path)" class="img-fluid">
+            <h3 class="">@top5RatedRestaurants[4].Name</h3>
+            <div>ADD DETAILS</div>
+
+            <a href="@Url.Action("Details", "Restaurants", new { id = top5RatedRestaurants[4].RestaurantID })" class="btn btn-md">View More</a>
+        </div>
+    </div>
+    <!--Top 5 Rated Restaurants end-->
+    <!--Statistics Graphs starts-->
+    <div>
+        @*restaurant data for js statistics*@
+        @foreach (Restaurant r in restaurantsAndReviews)
+        {
+            <div hidden class="restaurants" name="@r.Name" numOfReviews="@r.Reviews.Count" ratingScore="@r.Rating.Score"></div>
+        }
+        <!--Restaurants by number of reviews-->
+        <h1>Restaurants By number Of Reviews</h1>
+        <div id="pieChartRestaurantsByNumberOfReviews"></div>
+        <!--Restaurants by rating score-->
+        <h1>Restaurants By Rating</h1>
+        <div id="barChartRestaurantsByRatingScore"></div>
+    </div>
+    <!--Statistics Graphs ends-->
 </div>
-
-<div class="row mt-4">
-    <div class="col-sm-4">
-        <img src="@Url.Content(top5RatedRestaurants[0].Logo.Path)" class="img-fluid">
-        <h3 class="">@top5RatedRestaurants[0].Name</h3>
-        <div>ADD DETAILS</div>
-
-        <a href="@Url.Action("Details", "Restaurants", new { id = top5RatedRestaurants[0].RestaurantID })" class="btn btn-md">View More</a>
-    </div>
-
-    <div class="col-sm-4">
-        <img src="@Url.Content(top5RatedRestaurants[1].Logo.Path)" class="img-fluid">
-        <h3 class="">@top5RatedRestaurants[1].Name</h3>
-        <div>ADD DETAILS</div>
-
-        <a href="@Url.Action("Details", "Restaurants", new { id = top5RatedRestaurants[1].RestaurantID })" class="btn btn-md">View More</a>
-    </div>
-
-    <div class="col-sm-4">
-        <img src="@Url.Content(top5RatedRestaurants[2].Logo.Path)" class="img-fluid">
-        <h3 class="">@top5RatedRestaurants[2].Name</h3>
-        <div>ADD DETAILS</div>
-
-        <a href="@Url.Action("Details", "Restaurants", new { id = top5RatedRestaurants[2].RestaurantID })" class="btn btn-md">View More</a>
-    </div>
-</div>
-
-<div class="row mt-4">
-    <div class="col-sm-6">
-        <img src="@Url.Content(top5RatedRestaurants[3].Logo.Path)" class="img-fluid">
-        <h3 class="">@top5RatedRestaurants[3].Name</h3>
-        <div>ADD DETAILS</div>
-
-        <a href="@Url.Action("Details", "Restaurants", new { id = top5RatedRestaurants[3].RestaurantID })" class="btn btn-md">View More</a>
-    </div>
-    <div class="col-sm-6">
-        <img src="@Url.Content(top5RatedRestaurants[4].Logo.Path)" class="img-fluid">
-        <h3 class="">@top5RatedRestaurants[4].Name</h3>
-        <div>ADD DETAILS</div>
-
-        <a href="@Url.Action("Details", "Restaurants", new { id = top5RatedRestaurants[4].RestaurantID })" class="btn btn-md">View More</a>
-    </div>
-</div>
-<!--Top 5 Rated Restaurants end-->
-<!--Restaurans grouped by tags starts-->
-
-
-<!--Restaurans grouped by tags end-->
-<!--Statistics Graphs starts-->
-<div>
-    @*restaurant data for js statistics*@
-    @foreach (Restaurant r in restaurantsAndReviews)
-    {
-        <div hidden class="restaurants" name="@r.Name" numOfReviews="@r.Reviews.Count" ratingScore="@r.Rating.Score"></div>
-    }
-    <!--Restaurants by number of reviews-->
-    <h1>Restaurants By number Of Reviews</h1>
-    <div id="pieChartRestaurantsByNumberOfReviews"></div>
-    <!--Restaurants by rating score-->
-    <h1>Restaurants By Rating</h1>
-    <div id="barChartRestaurantsByRatingScore"></div>
-</div>
-<!--Statistics Graphs ends-->

@@ -43,14 +43,15 @@ namespace RateTheRest.Controllers
                         case "Name":
                             {
                                 chefs = from c in chefs
-                                        where c.FirstName.Contains(sb.searchString) || c.LastName.Contains(sb.searchString)
+                                        where c.FirstName.Contains(sb.searchString, StringComparison.CurrentCultureIgnoreCase) || 
+                                              c.LastName.Contains(sb.searchString, StringComparison.CurrentCultureIgnoreCase)
                                         select c;
                                 break;
                             }
                         case "Restaurant":
                             {
                                 chefs = from c in chefs
-                                        where c.Restaurants.Any(r => r.Name.Contains(sb.searchString))
+                                        where c.Restaurants.Any(r => r.Name.Contains(sb.searchString, StringComparison.CurrentCultureIgnoreCase))
                                         select c;
                                 break;
                             }
@@ -63,7 +64,7 @@ namespace RateTheRest.Controllers
             if (searchString.Count > 0)
                 ViewData["FiltersPlaceHolders"] = searchString.ToArray();
             else
-                ViewData["FiltersPlaceHolders"] = new string[2];
+                ViewData["FiltersPlaceHolders"] = new string[2] { "", "" };
             return View(chefs);
         }
         //_________________________________________________________

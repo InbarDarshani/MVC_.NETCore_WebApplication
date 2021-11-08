@@ -35,10 +35,6 @@ namespace RateTheRest.Controllers
             ViewData["RestaurantsAndReviews"] = _dbcontext.Restaurants
                 .Include(r => r.Reviews).ThenInclude(r => r.User).ToArray();
 
-            var query = from t in _dbcontext.Tags.Include(t => t.Restaurant).ToList()
-                         group t.Restaurant by t.TagName into groupedTags
-                         select new { tag = groupedTags.Key, restaurants = groupedTags.ToList() };
-            ViewData["RestaurantsGroupedByTags"] = query.ToList();
             return View();
         }
 

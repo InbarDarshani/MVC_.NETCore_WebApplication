@@ -5,166 +5,202 @@
     var filtersPlaceHolders = (string[])ViewData["FiltersPlaceHolders"];
 }
 
-<h1>Index</h1>
+<script defer src="~/js/Restaurants_Index.js"></script>
+<!--Slider-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/bootstrap-slider.js" integrity="sha512-tCkLWlSXiiMsUaDl5+8bqwpGXXh0zZsgzX6pB9IQCZH+8iwXRYfcCpdxl/owoM6U4ap7QZDW4kw7djQUiQ4G2A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/css/bootstrap-slider.css" integrity="sha512-SZgE3m1he0aEF3tIxxnz/3mXu/u/wlMNxQSnE0Cni9j/O8Gs+TjM9tm1NX34nRQ7GiLwUEzwuE3Wv2FLz2667w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-<!--Searching table-->
-<form action="/Restaurants" method="post">
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Filter</th>
-                <th>By Name</th>
-                <th>By Chef</th>
-                <th>By Location</th>
-                <th>By Tag</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-
-                <td></td>
-                <td>
-                    <p>
-                        <input hidden name="searchBy" type="text" value="Name">
-                        <input name="searchString" type="text" value="" placeholder="@filtersPlaceHolders[0]">
-                    </p>
-                </td>
-                <td>
-                    <p>
-                        <input hidden name="searchBy" type="text" value="Chef">
-                        <input name="searchString" type="text" value="" placeholder="@filtersPlaceHolders[1]">
-                    </p>
-                </td>
-                <td>
-                    <p>
-                        <input hidden name="searchBy" type="text" value="Location">
-                        <input name="searchString" type="text" value="" placeholder="@filtersPlaceHolders[2]">
-                    </p>
-                </td>
-                <td>
-                    <p>
-                        <input hidden name="searchBy" type="text" value="Tag">
-                        <input name="searchString" type="text" value="" placeholder="@filtersPlaceHolders[3]">
-                    </p>
-                </td>
-                <td>
-                    <input type="submit" value="Filter" />
-                </td>
-                <td>
-                    <a asp-action="Index">Clear Filters</a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</form>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-
-<!--Index table-->
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Logo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Chefs)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Location)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Tags)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.OpeningHours)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Rating)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @if (item.Logo != null)
+<div class="container-fluid">
+    <div class="row">
+        <!--Filter sidebar-->
+        <div class="col-auto">
+            <h2>Filter</h2>
+            <form asp-action="Index" method="post">
+                <table class="table table-borderless">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <input type="submit" value="Filter" class="btn btn-light" />
+                            </td>
+                            <td>
+                                <a type="button" asp-action="Index" class="btn btn-sm btn-light">Clear Filters</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Name</th>
+                            <td>
+                                <input hidden name="searchBy" type="text" value="Name">
+                                <input name="searchString" type="text" value="" placeholder="@filtersPlaceHolders[0]" class="form-control form-control-sm">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Chef</th>
+                            <td>
+                                <input hidden name="searchBy" type="text" value="Chef">
+                                <input name="searchString" type="text" value="" placeholder="@filtersPlaceHolders[1]" class="form-control form-control-sm">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Location</th>
+                            <td>
+                                <input hidden name="searchBy" type="text" value="Location">
+                                <input name="searchString" type="text" value="" placeholder="@filtersPlaceHolders[2]" class="form-control form-control-sm">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Tag</th>
+                            <td>
+                                <input hidden name="searchBy" type="text" value="Tag">
+                                <select name="searchString" class="form-select">
+                                    <option selected value="@filtersPlaceHolders[3]">@filtersPlaceHolders[3]</option>
+                                    @foreach (string t in GlobalTags.TAGS)
+                                    {
+                                        if (t != filtersPlaceHolders[3])
+                                        {
+                                            <option value="@t">@t</option>
+                                        }
+                                    }
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Open Day</th>
+                            <td>
+                                <input hidden name="searchBy" type="text" value="OpenDay">
+                                <select name="searchString" class="form-select">
+                                    <option selected value="@filtersPlaceHolders[4]">@filtersPlaceHolders[4]</option>
+                                    @foreach (string d in GlobalWeek.WEEK)
+                                    {
+                                        if (d != filtersPlaceHolders[4])
+                                        {
+                                            <option value="@d">@d</option>
+                                        }
+                                    }
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Rating</th>
+                            <td>
+                                <input hidden name="searchBy" type="text" value="Rating">
+                                <input id="ratingFilterSlider" name="searchString" type="text" data-slider-value="@filtersPlaceHolders[5]" data-slider-handle="custom" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+        <!--Index table-->
+        <div class="col-auto">
+            <h1>Index</h1>
+            <p>
+                <a asp-action="Create">Create New</a>
+            </p>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Logo)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Name)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Chefs)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Location)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Tags)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.OpeningHours)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Rating)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
                     {
-                        <a href="/Restaurants/Details/@item.RestaurantID">
-                            <img src="@Url.Content(item.Logo.Path)" alt="Logo" class="img-thumbnail" width="100" height="100">
-                        </a>
+                        <tr>
+                            <td>
+                                @if (item.Logo != null)
+                                {
+                                    <a href="/Restaurants/Details/@item.RestaurantID">
+                                        <img src="@Url.Content(item.Logo.Path)" alt="Logo" class="img-thumbnail" width="100" height="100">
+                                    </a>
+                                }
+                            </td>
+
+                            <td>
+                                <a href="/Restaurants/Details/@item.RestaurantID">
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </a>
+                            </td>
+
+                            <td>
+                                @if (item.Chefs != null && item.Chefs.Count > 0)
+                                {
+                                    <ul>
+                                        @foreach (Chef c in item.Chefs)
+                                        {
+                                            <li><a href="/Chefs/Details/@c.ChefID">@c.FirstName @c.LastName</a></li>
+                                        }
+                                    </ul>
+                                }
+                            </td>
+
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Location.Number)
+                                @Html.DisplayFor(modelItem => item.Location.Street)  st,
+                                @Html.DisplayFor(modelItem => item.Location.City),
+                                @Html.DisplayFor(modelItem => item.Location.Country)
+                            </td>
+
+                            <td>
+                                @if (item.Tags.Count > 0)
+                                {
+                                    <ul>
+                                        @foreach (Tag t in item.Tags)
+                                        {
+                                            <li> @t.TagName </li>
+                                        }
+                                    </ul>
+                                }
+                            </td>
+
+                            <td>
+                                <ul>
+                                    @foreach (OpeningHours day in item.OpeningHours)
+                                    {
+                                        @if (day.Open)
+                                        {
+                                            <li>
+                                                @day.DayOfWeek: @day.From.GetValueOrDefault().ToString("HH:mm")-@day.To.GetValueOrDefault().ToString("HH:mm")
+                                            </li>
+                                        }
+                                    }
+                                </ul>
+
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Rating.Score)
+                            </td>
+
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.RestaurantID">Edit</a> |
+                                <a asp-action="Delete" asp-route-id="@item.RestaurantID">Delete</a>
+                            </td>
+                        </tr>
                     }
-                </td>
-
-                <td>
-                    <a href="/Restaurants/Details/@item.RestaurantID">
-                        @Html.DisplayFor(modelItem => item.Name)
-                    </a>
-                </td>
-
-                <td>
-                    @if (item.Chefs != null && item.Chefs.Count > 0)
-                    {
-                        <ul>
-                            @foreach (Chef c in item.Chefs)
-                            {
-                                <li><a href="/Chefs/Details/@c.ChefID">@c.FirstName @c.LastName</a></li>
-                            }
-                        </ul>
-                    }
-                </td>
-
-
-                <td>
-                    @Html.DisplayFor(modelItem => item.Location.Number)
-                    @Html.DisplayFor(modelItem => item.Location.Street)  st,
-                    @Html.DisplayFor(modelItem => item.Location.City),
-                    @Html.DisplayFor(modelItem => item.Location.Country)
-                </td>
-
-                <td>
-                    @if (item.Tags.Count > 0)
-                    {
-                        <ul>
-                            @foreach (Tag t in item.Tags)
-                            {
-                                <li> @t.TagName </li>
-                            }
-                        </ul>
-                    }
-                </td>
-
-                <td>
-                    <ul>
-                        @foreach (OpeningHours day in item.OpeningHours)
-                        {
-                            @if (day.Open)
-                            {
-                                <li>
-                                    @day.DayOfWeek: @day.From.GetValueOrDefault().ToString("HH:mm")-@day.To.GetValueOrDefault().ToString("HH:mm")
-                                </li>
-                            }
-                        }
-                    </ul>
-
-                </td>
-
-                <td>
-                    @Html.DisplayFor(modelItem => item.Rating.Score)
-                </td>
-
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.RestaurantID">Edit</a> |
-                    <a asp-action="Delete" asp-route-id="@item.RestaurantID">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

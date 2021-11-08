@@ -32,7 +32,7 @@ namespace RateTheRest.Models
         {
             if (Restaurant.Reviews == null) return 0;
             if (Restaurant.Reviews.Count == 0) return 0;
-            return Restaurant.Reviews.Sum(r => r.Score) / Restaurant.Reviews.Count;
+            return (float)(Restaurant.Reviews.Sum(r => r.Score) / Restaurant.Reviews.Count);
         }
     }
 }

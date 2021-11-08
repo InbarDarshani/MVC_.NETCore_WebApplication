@@ -51,7 +51,6 @@ namespace RateTheRest.Models
 
         //One(Restaurant)-to-One(Rating)
         [ValidateNever]
-        [Display(Name = "Rating Score")]
         public virtual Rating Rating { get; set; } = new Rating() { Score = 0, Users = new List<ApplicationUser>() };
 
         //One(Restaurant)-to-Many(Reviews)
