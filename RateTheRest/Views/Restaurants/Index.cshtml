@@ -51,7 +51,7 @@
                             <th>Tag</th>
                             <td>
                                 <input hidden name="searchBy" type="text" value="Tag">
-                                <select name="searchString" class="form-select">
+                                <select name="searchString" class="custom-select">
                                     <option selected value="@filtersPlaceHolders[3]">@filtersPlaceHolders[3]</option>
                                     @foreach (string t in GlobalTags.TAGS)
                                     {
@@ -67,7 +67,7 @@
                             <th>Open Day</th>
                             <td>
                                 <input hidden name="searchBy" type="text" value="OpenDay">
-                                <select name="searchString" class="form-select">
+                                <select name="searchString" class="custom-select">
                                     <option selected value="@filtersPlaceHolders[4]">@filtersPlaceHolders[4]</option>
                                     @foreach (string d in GlobalWeek.WEEK)
                                     {

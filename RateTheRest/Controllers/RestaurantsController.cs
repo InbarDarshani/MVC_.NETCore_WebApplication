@@ -87,7 +87,7 @@ namespace RateTheRest.Controllers
                                 restaurants = from r in restaurants
                                               join oh in _dbcontext.OpeningHours
                                               on r.RestaurantID equals oh.Restaurant.RestaurantID
-                                              where oh.Open == true
+                                              where oh.Open == true && oh.DayOfWeek == sb.searchString
                                               select r;
 
                                 break;

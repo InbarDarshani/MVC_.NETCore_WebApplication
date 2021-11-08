@@ -9,173 +9,172 @@
 <script defer src="~/js/Restaurants_Details.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
-<h1>Details</h1>
-
-<div>
-    <h4>Restaurant</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-
-        @if (Model.Description != null)
-        {
+<div class="container">
+    <h1>Details</h1>
+    <div>
+        <h4>Restaurant</h4>
+        <hr />
+        <dl class="row">
             <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Description)
+                @Html.DisplayNameFor(model => model.Name)
             </dt>
             <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Description)
+                @Html.DisplayFor(model => model.Name)
             </dd>
-        }
 
-        @if (Model.Logo != null)
-        {
+            @if (Model.Description != null)
+            {
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Description)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Description)
+                </dd>
+            }
+
+            @if (Model.Logo != null)
+            {
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Logo)
+                </dt>
+                <dd class="col-sm-10">
+                    <img src="@Url.Content(Model.Logo.Path)" alt="Logo" class="img-thumbnail" width="100" height="100">
+                </dd>
+            }
+
             <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Logo)
+                @Html.DisplayNameFor(model => model.Location)
             </dt>
             <dd class="col-sm-10">
-                <img src="@Url.Content(Model.Logo.Path)" alt="Logo" class="img-thumbnail" width="100" height="100">
-            </dd>
-        }
-
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Location)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Location.Number)
-            @Html.DisplayFor(model => model.Location.Street) st,
-            @Html.DisplayFor(model => model.Location.City),
-            @Html.DisplayFor(model => model.Location.Country)
-            <div class="col-md-4">
-                <iframe width="450"
-                        height="250"
-                        frameborder="0" style="border:0"
-                        src="https://www.google.com/maps/embed/v1/place?key=AIzaSyAotfnVAiNwryR5RirqKhogBXHcIzsVeEM&@googleLocation" allowfullscreen>
-                </iframe>
-            </div>
-        </dd>
-
-        <dt class="col-sm-2">
-            Weather
-        </dt>
-        <dd class="col-sm-10">
-            <div class="weather" city="@Model.Location.City"></div>
-        </dd>
-
-
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.OpeningHours)
-        </dt>
-        <dd class="col-sm-10">
-            <ul>
-                @foreach (OpeningHours day in Model.OpeningHours)
-                {
-                    @if (day.Open)
-                    {
-                        <li>
-                            @day.DayOfWeek: @day.From.GetValueOrDefault().ToString("HH:mm")-@day.To.GetValueOrDefault().ToString("HH:mm")
-                        </li>
-                    }
-                }
-            </ul>
-        </dd>
-
-
-        @if (Model.Tags.Count > 0)
-        {
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Tags)
-            </dt>
-            <dd class="col-sm-10">
-                <ul>
-                    @foreach (Tag t in Model.Tags)
-                    {
-                        <li> @t.TagName </li>
-                    }
-                </ul>
-            </dd>
-        }
-
-        @if (Model.Chefs != null && Model.Chefs.Count > 0)
-        {
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Chefs)
-            </dt>
-            <dd class="col-sm-10">
-                <ul>
-                    @foreach (Chef c in Model.Chefs)
-                    {
-                        <li><a href="/Chefs/Details/@c.ChefID">@c.FirstName @c.LastName</a></li>
-                    }
-                </ul>
-            </dd>
-        }
-
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Rating)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Rating.Score)
-        </dd>
-
-
-        @if (Model.Reviews.Count > 0)
-        {
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Reviews)
-            </dt>
-            <dd class="col-sm-10">
-                <table class="table-bordered">
-                    <tr>
-                        <th>Score</th>
-                        <th>Description</th>
-                        <th>Submitted By</th>
-                    </tr>
-                    @foreach (Review r in Model.Reviews)
-                    {
-                        <tr>
-                            <td>@r.Score</td>
-                            <td>@r.Text</td>
-                            <td>@r.User.FirstName @r.User.LastName</td>
-                        </tr>
-                    }
-                </table>
-            </dd>
-        }
-        <dt class="col-sm-2">
-            <button type="button" id="createReview" class="btn">Create a Review</button>
-        </dt>
-        <dd class="col-sm-10">
-            <input type="hidden" id="restaurantIdValue" value="@Model.RestaurantID" />
-            <div id="createReviewPartial"></div>
-        </dd>
-
-        @if (Model.Photos != null && Model.Photos.Count > 0)
-        {
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Photos)
-            </dt>
-            <dd class="col-sm-10">
-                <div class="flex-container">
-                    <div class="rowPhotos">
-                        @foreach (PhotoFile p in Model.Photos)
-                        {
-                            <img src="@Url.Content(p.Path)" />
-                        }
-                    </div>
+                @Html.DisplayFor(model => model.Location.Number)
+                @Html.DisplayFor(model => model.Location.Street) st,
+                @Html.DisplayFor(model => model.Location.City),
+                @Html.DisplayFor(model => model.Location.Country)
+                <div class="col-md-4">
+                    <iframe width="450"
+                            height="250"
+                            frameborder="0" style="border:0"
+                            src="https://www.google.com/maps/embed/v1/place?key=AIzaSyAotfnVAiNwryR5RirqKhogBXHcIzsVeEM&@googleLocation" allowfullscreen>
+                    </iframe>
                 </div>
             </dd>
 
-        }
-    </dl>
+            <dt class="col-sm-2">
+                Weather
+            </dt>
+            <dd class="col-sm-10">
+                <div class="weather" city="@Model.Location.City"></div>
+            </dd>
 
-</div>
 
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.RestaurantID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.OpeningHours)
+            </dt>
+            <dd class="col-sm-10">
+                <ul>
+                    @foreach (OpeningHours day in Model.OpeningHours)
+                    {
+                        @if (day.Open)
+                        {
+                            <li>
+                                @day.DayOfWeek: @day.From.GetValueOrDefault().ToString("HH:mm")-@day.To.GetValueOrDefault().ToString("HH:mm")
+                            </li>
+                        }
+                    }
+                </ul>
+            </dd>
+
+
+            @if (Model.Tags.Count > 0)
+            {
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Tags)
+                </dt>
+                <dd class="col-sm-10">
+                    <ul>
+                        @foreach (Tag t in Model.Tags)
+                        {
+                            <li> @t.TagName </li>
+                        }
+                    </ul>
+                </dd>
+            }
+
+            @if (Model.Chefs != null && Model.Chefs.Count > 0)
+            {
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Chefs)
+                </dt>
+                <dd class="col-sm-10">
+                    <ul>
+                        @foreach (Chef c in Model.Chefs)
+                        {
+                            <li><a href="/Chefs/Details/@c.ChefID">@c.FirstName @c.LastName</a></li>
+                        }
+                    </ul>
+                </dd>
+            }
+
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Rating)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Rating.Score)
+            </dd>
+
+
+            @if (Model.Reviews.Count > 0)
+            {
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Reviews)
+                    <button type="button" id="createReview" class="btn btn-light">Create a Review</button>
+                </dt>
+                <dd class="col-sm-10">
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>Score</th>
+                            <th>Description</th>
+                            <th>Submitted By</th>
+                        </tr>
+                        @foreach (Review r in Model.Reviews)
+                        {
+                            <tr>
+                                <td>@r.Score</td>
+                                <td>@r.Text</td>
+                                <td>@r.User.FirstName @r.User.LastName</td>
+                            </tr>
+                        }
+                    </table>
+                </dd>
+            }
+            <dd class="col-sm-10">
+                <input type="hidden" id="restaurantIdValue" value="@Model.RestaurantID" />
+                <div id="createReviewPartial"></div>
+            </dd>
+
+            @if (Model.Photos != null && Model.Photos.Count > 0)
+            {
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Photos)
+                </dt>
+                <dd class="col-sm-10">
+                    <div class="flex-container">
+                        <div class="rowPhotos">
+                            @foreach (PhotoFile p in Model.Photos)
+                            {
+                                <img src="@Url.Content(p.Path)" />
+                            }
+                        </div>
+                    </div>
+                </dd>
+
+            }
+        </dl>
+
+    </div>
+
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.RestaurantID">Edit</a> |
+        <a asp-action="Index">Back to List</a>
+    </div>
 </div>

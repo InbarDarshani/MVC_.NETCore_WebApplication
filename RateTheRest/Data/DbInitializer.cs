@@ -86,14 +86,37 @@ namespace RateTheRest.Data
             foreach (ApplicationUser u in users) { context.Users.Add(u); }
             context.SaveChanges();
 
-            //Create reviews with random score
             foreach (Restaurant restaurant in restaurants)
             {
+                //Create reviews with random score
                 var rand = new Random();
                 for (int i = 0; i < rand.Next(20, 50); i++)
-                {
-                    createReview(new Review(), rand.Next(0, 10), restaurant.RestaurantID, "Basic@walla.com");
-                }
+                    createReview(new Review(), rand.Next(0, 11), restaurant.RestaurantID, "Basic@walla.com");
+
+                //Set opening hours on random days
+                int randomDay = rand.Next(0, 7);
+                restaurant.OpeningHours.ElementAt(randomDay).Open = true;
+                restaurant.OpeningHours.ElementAt(randomDay).From = new DateTime(2021, 01, 01, 9, 0, 0);
+                restaurant.OpeningHours.ElementAt(randomDay).To = new DateTime(2021, 01, 01, 22, 0, 0);
+                randomDay = rand.Next(0, 7);
+                restaurant.OpeningHours.ElementAt(randomDay).Open = true;
+                restaurant.OpeningHours.ElementAt(randomDay).From = new DateTime(2021, 01, 01, 11, 0, 0);
+                restaurant.OpeningHours.ElementAt(randomDay).To = new DateTime(2021, 01, 01, 23, 0, 0);
+                randomDay = rand.Next(0, 7);
+                restaurant.OpeningHours.ElementAt(randomDay).Open = true;
+                restaurant.OpeningHours.ElementAt(randomDay).From = new DateTime(2021, 01, 01, 10, 0, 0);
+                restaurant.OpeningHours.ElementAt(randomDay).To = new DateTime(2021, 01, 01, 22, 0, 0);
+                randomDay = rand.Next(0, 7);
+                restaurant.OpeningHours.ElementAt(randomDay).Open = true;
+                restaurant.OpeningHours.ElementAt(randomDay).From = new DateTime(2021, 01, 01, 9, 0, 0);
+                restaurant.OpeningHours.ElementAt(randomDay).To = new DateTime(2021, 01, 01, 23, 59, 0);
+
+                //Add random tags
+                ICollection<Tag> tags = new List<Tag>();
+                int randomTag = rand.Next(0, 2);
+                restaurant.Tags.Add(new Tag { TagName = GlobalTags.TAGS[randomTag] });
+                randomTag = rand.Next(2, GlobalTags.TAGS.Length);
+                restaurant.Tags.Add(new Tag { TagName = GlobalTags.TAGS[randomTag] });
             }
 
             //Update chefs for each restaurant
@@ -152,7 +175,7 @@ namespace RateTheRest.Data
             chefs[2].Portrait = new PortraitFile { FileName = "Portrait", Path = "~/dbInitialize/Chefs/MeirAdoni.jpg" };
             chefs[3].Portrait = new PortraitFile { FileName = "Portrait", Path = "~/dbInitialize/Chefs/AssafGranit.jpg" };
             chefs[4].Portrait = new PortraitFile { FileName = "Portrait", Path = "~/dbInitialize/Chefs/MoshikRoth.jpg" };
-                                                                                                        
+                                   
             context.SaveChanges();
 
             void createReview(Review review, int score, int restaurantId, string username)

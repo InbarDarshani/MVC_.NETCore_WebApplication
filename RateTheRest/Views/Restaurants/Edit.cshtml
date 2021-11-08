@@ -6,138 +6,135 @@
 }
 
 <script defer src="~/js/Restaurants_CreateEdit.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>
+<!--Bootstrap Multiselect using jquary multiselect-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/1.1.1/css/bootstrap-multiselect.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/1.1.1/js/bootstrap-multiselect.js"></script>
 
-<h1>Edit</h1>
-<h4>Restaurant</h4>
+<div class="container">
+    <h1>Edit</h1>
+    <h4>Restaurant</h4>
+    <hr />
+    <div class="row">
+        <div class="col-auto">
+            <form asp-action="Edit" enctype="multipart/form-data">
+                <div asp-validation-summary="None" class="text-danger"></div>
+                <input type="hidden" asp-for="RestaurantID" />
 
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit" enctype="multipart/form-data">
-            <div asp-validation-summary="None" class="text-danger"></div>
-            <input type="hidden" asp-for="RestaurantID" />
+                <div class="form-group">
+                    <label asp-for="Name"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Description"></label>
+                    <textarea asp-for="Description" class="form-control" rows="2"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
 
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <textarea asp-for="Description" class="form-control" rows="2"></textarea>
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
+                <div class="form-group form-row">
+                    <label asp-for="Location"></label>
+                    <div class="col">
+                        <input asp-for="Location.Country" class="form-control"/>
+                        <span asp-validation-for="Location.Country" class="text-danger"></span>
+                    </div>
+                    <div class="col">
+                        <input asp-for="Location.City" class="form-control"/>
+                        <span asp-validation-for="Location.City" class="text-danger"></span>
+                    </div>
+                    <div class="col">
+                        <input asp-for="Location.Street" class="form-control"/>
+                        <span asp-validation-for="Location.Street" class="text-danger"></span>
+                    </div>
+                    <div class="col">
+                        <input asp-for="Location.Number" class="form-control"/>
+                        <span asp-validation-for="Location.Number" class="text-danger"></span>
+                    </div>
+                </div>
 
-            <div class="form-group">
-                <label asp-for="Location" class="control-label"></label>
-                <table class="table">
-                    <tr>
-                        <td>
-                            <label asp-for="Location.Country" class="control-label"></label>
-                            <input asp-for="Location.Country" class="form-control" />
-                            <span asp-validation-for="Location.Country" class="text-danger"></span>
-                        </td>
-                        <td>
-                            <label asp-for="Location.City" class="control-label"></label>
-                            <input asp-for="Location.City" class="form-control" />
-                            <span asp-validation-for="Location.City" class="text-danger"></span>
-                        </td>
-                        <td>
-                            <label asp-for="Location.Street" class="control-label"></label>
-                            <input asp-for="Location.Street" class="form-control" />
-                            <span asp-validation-for="Location.Street" class="text-danger"></span>
-                        </td>
-                        <td>
-                            <label asp-for="Location.Number" class="control-label"></label>
-                            <input asp-for="Location.Number" class="form-control" />
-                            <span asp-validation-for="Location.Number" class="text-danger"></span>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="form-group">
-                <label class="control-label"></label>
-                <table id="openingHours" class="table">
-                    @foreach (OpeningHours day in Model.OpeningHours)
-                    {
-                        <tr>
-                            <td>
-                                <div class="openingHours-day">
-                                    <input name="days" type="checkbox" class="form-check-input" checked="@day.Open" value="@day.DayOfWeek" />@day.DayOfWeek:
-                                    <input name="from" type="time" value="@day.From.GetValueOrDefault().ToString("HH:mm")" /> - <input name="to" type="time" value="@day.To.GetValueOrDefault().ToString("HH:mm")" />
-                                </div>
-                                <span hidden class="openingHoursErrors text-danger"></span>
-                            </td>
-                        </tr>
-                    }
-                </table>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Tags" class="control-label"></label>
-                @if (Model.Tags != null && Model.Tags.Count > 0)
-                {
-                    <ul>
-                        @foreach (Tag t in Model.Tags)
+                <div class="form-group">
+                    <label></label>
+                    <table id="openingHours" class="table table-borderless">
+                        @foreach (OpeningHours day in Model.OpeningHours)
                         {
-                            <li> @t.TagName </li>
+                            <tr>
+                                <td>
+                                    <div class="openingHours-day">
+                                        <input name="days" type="checkbox" class="form-check-input" checked="@day.Open" value="@day.DayOfWeek" />@day.DayOfWeek:
+                                        <input name="from" type="time" value="@day.From.GetValueOrDefault().ToString("HH:mm")" /> - <input name="to" type="time" value="@day.To.GetValueOrDefault().ToString("HH:mm")" />
+                                    </div>
+                                    <span hidden class="openingHoursErrors text-danger"></span>
+                                </td>
+                            </tr>
                         }
-                        <li><input name="tags" type="checkbox" class="form-check-input" value="0" />Clear all assigned tags</li>
-                    </ul>
-                }
-                <select class="MultipleCheckboxes" name="tags" multiple>
-                    @foreach (string t in GlobalTags.TAGS)
-                    {
-                        <option value="@t">@t</option>
-                    }
-                </select>
-            </div>
+                    </table>
+                </div>
 
-            <div class="form-group">
-                <label asp-for="Chefs" class="control-label"></label>
-                @if (Model.Chefs != null && Model.Chefs.Count > 0)
-                {
-                    <ul>
-                        @foreach (Chef c in Model.Chefs)
+                <div class="form-group">
+                    <label asp-for="Tags"></label>
+                    @if (Model.Tags != null && Model.Tags.Count > 0)
+                    {
+                        <ul>
+                            @foreach (Tag t in Model.Tags)
+                            {
+                                <li> @t.TagName </li>
+                            }
+                            <li><input name="tags" type="checkbox" class="form-check-input" value="0" />Clear all assigned tags</li>
+                        </ul>
+                    }
+                    <select class="MultipleCheckboxes" name="tags" multiple>
+                        @foreach (string t in GlobalTags.TAGS)
                         {
-                            <li> @c.FirstName @c.LastName </li>
+                            <option value="@t">@t</option>
                         }
-                        <li><input name="chefs" type="checkbox" class="form-check-input" value="0" />Clear all assigned chefs</li>
-                    </ul>
-                }
-                <select class="MultipleCheckboxes" name="chefs" multiple>
-                    @foreach (Chef c in chefs)
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Chefs"></label>
+                    @if (Model.Chefs != null && Model.Chefs.Count > 0)
                     {
-                        <option value="@c.ChefID">@c.FirstName @c.LastName</option>
+                        <ul>
+                            @foreach (Chef c in Model.Chefs)
+                            {
+                                <li> @c.FirstName @c.LastName </li>
+                            }
+                            <li><input name="chefs" type="checkbox" class="form-check-input" value="0" />Clear all assigned chefs</li>
+                        </ul>
                     }
-                </select>
-            </div>
+                    <select class="MultipleCheckboxes" name="chefs" multiple>
+                        @foreach (Chef c in chefs)
+                        {
+                            <option value="@c.ChefID">@c.FirstName @c.LastName</option>
+                        }
+                    </select>
+                </div>
 
-            <div class="form-group">
-                <label asp-for="Logo" class="control-label"></label>
-                @if (Model.Logo != null)
-                {
-                    <div><img src="@Url.Content(Model.Logo.Path)" alt="Logo" class="img-thumbnail" width="100" height="100"></div>
-                }
-                <input name="logo" type="file" class="form-control-file" />
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Photos" class="control-label"></label>
-                <input type="file" multiple name="photos" class="form-control-file" />
-            </div>
-
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+                <div class="form-row">
+                    <div class="form-group col">
+                        <label asp-for="Logo"></label>
+                        <input name="logo" type="file" class="form-control-file" />
+                        @if (Model.Logo != null)
+                        {
+                            <div><img src="@Url.Content(Model.Logo.Path)" alt="Logo" class="img-thumbnail" width="100" height="100"></div>
+                        }
+                    </div>
+                    <div class="form-group col">
+                        <label asp-for="Photos"></label>
+                        <input type="file" multiple name="photos" class="form-control-file" />
+                    </div>
+                    <span hidden class="imageFileErrors text-danger col"></span>
+                </div>
+                
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
 </div>
 
 @section Scripts {

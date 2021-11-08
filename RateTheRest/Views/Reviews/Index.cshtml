@@ -6,56 +6,58 @@
 }
 
 
-@if (userReviews.Count == 0)
-{
-    <h1>You have no reviews!</h1>
-    <h1>Go to Restaurants page to create some</h1>
-}
-else
-{
-    <h1>Index</h1>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    Restaurant Name
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Text)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Score)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.DateCreated)
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in userReviews)
-            {
+<div class="container">
+    @if (userReviews.Count == 0)
+    {
+        <h1>You have no reviews!</h1>
+        <h1>Go to Restaurants page to create some</h1>
+    }
+    else
+    {
+        <h1>Index</h1>
+        <table class="table">
+            <thead>
                 <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Restaurant.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Text)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Score)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.DateCreated)
-                    </td>
-                    <td>
-                        <form asp-action="Delete">
-                            <input type="hidden" value="@item.ReviewID" name="id"/>
-                            <input type="submit" value="Delete" class="btn" /> 
-                        </form>
-                    </td>
+                    <th>
+                        Restaurant Name
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Text)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Score)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.DateCreated)
+                    </th>
+                    <th></th>
                 </tr>
-            }
-        </tbody>
-    </table>
-}
+            </thead>
+            <tbody>
+                @foreach (var item in userReviews)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Restaurant.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Text)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Score)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DateCreated)
+                        </td>
+                        <td>
+                            <form asp-action="Delete">
+                                <input type="hidden" value="@item.ReviewID" name="id" />
+                                <input type="submit" value="Delete" class="btn" />
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
