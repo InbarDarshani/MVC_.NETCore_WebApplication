@@ -41,7 +41,7 @@ namespace RateTheRest.Controllers
                 .Include(r => r.Chefs)
                 .ToList();
 
-            //Perform search
+            //Perform filter
             IEnumerable<(string searchBy, string searchString)> filters = searchBy.Zip(searchString, (s1, s2) => (s1, s2));
             foreach (var sb in filters)
             {
@@ -52,14 +52,15 @@ namespace RateTheRest.Controllers
                         case "Name":
                             {
                                 restaurants = from r in restaurants
-                                              where r.Name.Contains(sb.searchString)
+                                              where r.Name.Contains(sb.searchString, StringComparison.CurrentCultureIgnoreCase)
                                               select r;
                                 break;
                             }
                         case "Chef":
                             {
                                 restaurants = from r in restaurants
-                                              where r.Chefs.Any(c => c.FirstName.Contains(sb.searchString) || c.LastName.Contains(sb.searchString))
+                                              where r.Chefs.Any(c => c.FirstName.Contains(sb.searchString, StringComparison.CurrentCultureIgnoreCase) || 
+                                                                     c.LastName.Contains(sb.searchString, StringComparison.CurrentCultureIgnoreCase))
                                               select r;
                                 break;
                             }
@@ -68,14 +69,35 @@ namespace RateTheRest.Controllers
                                 restaurants = from r in restaurants
                                               join l in _dbcontext.Locations
                                               on r.RestaurantID equals l.Restaurant.RestaurantID
-                                              where l.Country.Contains(sb.searchString) || l.City.Contains(sb.searchString) || l.Street.Contains(sb.searchString)
+                                              where l.Country.Contains(sb.searchString, StringComparison.CurrentCultureIgnoreCase) || 
+                                                    l.City.Contains(sb.searchString, StringComparison.CurrentCultureIgnoreCase) || 
+                                                    l.Street.Contains(sb.searchString, StringComparison.CurrentCultureIgnoreCase)
                                               select r;
                                 break;
                             }
                         case "Tag":
                             {
                                 restaurants = from r in restaurants
-                                              where r.Tags.Any(t => t.TagName.Contains(sb.searchString))
+                                              where r.Tags.Any(t => t.TagName.Contains(sb.searchString, StringComparison.CurrentCultureIgnoreCase))
+                                              select r;
+                                break;
+                            }
+                        case "OpenDay":
+                            {
+                                restaurants = from r in restaurants
+                                              join oh in _dbcontext.OpeningHours
+                                              on r.RestaurantID equals oh.Restaurant.RestaurantID
+                                              where oh.Open == true && oh.DayOfWeek == sb.searchString
+                                              select r;
+
+                                break;
+                            }
+                        case "Rating":
+                            {
+                                restaurants = from r in restaurants
+                                              join rt in _dbcontext.Ratings
+                                              on r.RestaurantID equals rt.Restaurant.RestaurantID
+                                              where rt.Score >= float.Parse(sb.searchString)
                                               select r;
                                 break;
                             }
@@ -88,7 +110,7 @@ namespace RateTheRest.Controllers
             if (searchString.Count > 0)
                 ViewData["FiltersPlaceHolders"] = searchString.ToArray();
             else
-                ViewData["FiltersPlaceHolders"] = new string[4];
+                ViewData["FiltersPlaceHolders"] = new string[6] { "", "", "", "", "", "" };
             return View(restaurants);
         }
 

@@ -5,106 +5,109 @@
     var filtersPlaceHolders = (string[])ViewData["FiltersPlaceHolders"];
 }
 
-<h1>Index</h1>
+<div class="container-fluid">
+    <div class="row">
+        <!--Filter sidebar-->
+        <div class="col-auto">
+            <h2>Filter</h2>
+            <form asp-action="Index" method="post">
+                <table class="table table-borderless">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <input type="submit" value="Filter" class="btn btn-light" />
+                            </td>
+                            <td>
+                                <a type="button" asp-action="Index" class="btn btn-sm btn-light">Clear Filters</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Name</th>
+                            <td>
+                                <input hidden name="searchBy" type="text" value="Name">
+                                <input name="searchString" type="text" value="" placeholder="@filtersPlaceHolders[0]">
 
-<!--Searching table-->
-<form action="/Chefs" method="post">
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Filter</th>
-                <th>By Name</th>
-                <th>By Restaurant</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Restaurant</th>
+                            <td>
+                                <input hidden name="searchBy" type="text" value="Restaurant">
+                                <input name="searchString" type="text" value="" placeholder="@filtersPlaceHolders[1]">
 
-                <td></td>
-                <td>
-                    <p>
-                        <input hidden name="searchBy" type="text" value="Name">
-                        <input name="searchString" type="text" value="" placeholder="@filtersPlaceHolders[0]">
-                    </p>
-                </td>
-                <td>
-                    <p>
-                        <input hidden name="searchBy" type="text" value="Restaurant">
-                        <input name="searchString" type="text" value="" placeholder="@filtersPlaceHolders[1]">
-                    </p>
-                </td>
-                <td>
-                    <input type="submit" value="Filter" />
-                </td>
-                <td>
-                    <a asp-action="Index">Clear Filters</a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</form>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Portrait)
-            </th>
-            <th>
-                Name
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AvgRate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Restaurants)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @if (item.Portrait != null)
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+        <!--Index table-->
+        <div class="col-auto">
+            <h1>Index</h1>
+            <p>
+                <a asp-action="Create">Create New</a>
+            </p>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Portrait)
+                        </th>
+                        <th>
+                            Name
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.AvgRate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Restaurants)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
                     {
-                        <a asp-action="Details" asp-route-id="@item.ChefID">
-                            <img src="@Url.Content(item.Portrait.Path)" alt="Logo" class="img-thumbnail" width="100" height="100">
-                        </a>
+                        <tr>
+                            <td>
+                                @if (item.Portrait != null)
+                                {
+                                    <a href="/Restaurants/Details/@item.ChefID">
+                                        <img src="@Url.Content(item.Portrait.Path)" alt="Logo" class="img-thumbnail" width="100" height="100">
+                                    </a>
+                                }
+                            </td>
+
+                            <td>
+                                <a href="/Restaurants/Details/@item.ChefID">
+                                    @Html.DisplayFor(modelItem => item.FirstName) @Html.DisplayFor(modelItem => item.LastName)
+                                </a>
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AvgRate)
+                            </td>
+
+                            <td>
+                                @if (item.Restaurants != null || item.Restaurants.Count > 0)
+                                {
+                                    <ul>
+                                        @foreach (Restaurant r in item.Restaurants)
+                                        {
+                                            <li><a href="/Restaurants/Details/@r.RestaurantID">@r.Name</a></li>
+                                        }
+                                    </ul>
+                                }
+                            </td>
+
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.ChefID">Edit</a> |
+                                <a asp-action="Delete" asp-route-id="@item.ChefID">Delete</a>
+                            </td>
+                        </tr>
                     }
-                </td>
-
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.ChefID">
-                        @Html.DisplayFor(modelItem => item.FirstName) @Html.DisplayFor(modelItem => item.LastName)
-                    </a>
-                </td>
-
-                <td>
-                    @Html.DisplayFor(modelItem => item.AvgRate)
-                </td>
-
-                <td>
-                    @if (item.Restaurants != null || item.Restaurants.Count > 0)
-                    {
-                        <ul>
-                            @foreach (Restaurant r in item.Restaurants)
-                            {
-                                <li> @r.Name </li>
-                            }
-                        </ul>
-                    }
-                </td>
-
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.ChefID">Edit</a> |
-                    <a asp-action="Delete" asp-route-id="@item.ChefID">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

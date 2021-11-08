@@ -32,14 +32,9 @@ namespace RateTheRest.Controllers
                 .Include(r => r.Chefs)
                 .OrderByDescending(r => r.Rating.Score).Take(5).ToArray();
 
-            ViewData["RestaurantsByNumberOfReviews"] = _dbcontext.Restaurants
+            ViewData["RestaurantsAndReviews"] = _dbcontext.Restaurants
                 .Include(r => r.Reviews).ThenInclude(r => r.User).ToArray();
 
-            return View();
-        }
-
-        public IActionResult Privacy()
-        {
             return View();
         }
 

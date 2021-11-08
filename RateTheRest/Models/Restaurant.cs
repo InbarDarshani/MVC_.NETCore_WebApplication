@@ -16,7 +16,7 @@ namespace RateTheRest.Models
 {
 	public class Restaurant
 	{
-		public Restaurant() { this.Chefs = new HashSet<Chef>(); }     //For the Many to Many Relation
+		//public Restaurant() { this.Chefs = new HashSet<Chef>(); }     //For the Many to Many Relation
 
 		public int RestaurantID { get; set; }
 
@@ -51,7 +51,6 @@ namespace RateTheRest.Models
 
         //One(Restaurant)-to-One(Rating)
         [ValidateNever]
-        [Display(Name = "Rating Score")]
         public virtual Rating Rating { get; set; } = new Rating() { Score = 0, Users = new List<ApplicationUser>() };
 
         //One(Restaurant)-to-Many(Reviews)
@@ -68,6 +67,6 @@ namespace RateTheRest.Models
 
 		//Many(Restaurants)-to-Many(Chefs)
 		[ValidateNever]
-		public virtual ICollection<Chef>? Chefs { get; set; }
-	}
+		public virtual ICollection<Chef>? Chefs { get; set; } = new HashSet<Chef>();
+    }
 }

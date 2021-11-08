@@ -5,114 +5,112 @@
     var chefs = (List<Chef>)ViewData["Chefs"];
 }
 
-<h1>Create</h1>
-<h4>Restaurant</h4>
 <script defer src="~/js/Restaurants_CreateEdit.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>
-
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create" enctype="multipart/form-data">
-            <div asp-validation-summary="None" class="text-danger"></div>
-
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <textarea asp-for="Description" class="form-control" rows="2"></textarea>
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
+<!--Bootstrap Multiselect using jquary multiselect-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/1.1.1/css/bootstrap-multiselect.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/1.1.1/js/bootstrap-multiselect.js"></script>
 
 
-            <div class="form-group">
-                <label asp-for="Location" class="control-label"></label>
-                <table class="table">
-                    <tr>
-                        <td>
-                            <label asp-for="Location.Country" class="control-label"></label>
-                            <input asp-for="Location.Country" class="form-control" />
-                            <span asp-validation-for="Location.Country" class="text-danger"></span>
-                        </td>
-                        <td>
-                            <label asp-for="Location.City" class="control-label"></label>
-                            <input asp-for="Location.City" class="form-control" />
-                            <span asp-validation-for="Location.City" class="text-danger"></span>
-                        </td>
-                        <td>
-                            <label asp-for="Location.Street" class="control-label"></label>
-                            <input asp-for="Location.Street" class="form-control" />
-                            <span asp-validation-for="Location.Street" class="text-danger"></span>
-                        </td>
-                        <td>
-                            <label asp-for="Location.Number" class="control-label"></label>
-                            <input asp-for="Location.Number" class="form-control" />
-                            <span asp-validation-for="Location.Number" class="text-danger"></span>
-                        </td>
-                    </tr>
-                </table>
-            </div>
+<div class="container">
+    <h1>Create</h1>
+    <h4>Restaurant</h4>
+    <hr />
+    <div class="row">
+        <div class="col-auto">
+            <form asp-action="Create" enctype="multipart/form-data">
+                <div asp-validation-summary="None" class="text-danger"></div>
 
-            <div class="form-group">
-                <label asp-for="OpeningHours" class="control-label"></label>
-                <table id="openingHours" class="table">
-                    @foreach (string day in GlobalWeek.WEEK)
-                    {
-                        <tr>
-                            <td>
-                                <div class="openingHours-day">
-                                    <input name="days" type="checkbox" class="form-check-input" value="@Html.DisplayName(day)" />@Html.DisplayName(day):
-                                    <input name="from" type="time" /> - <input name="to" type="time" />
-                                    <span hidden class="openingHoursErrors text-danger"></span>
-                                </div>
-                            </td>
-                        </tr>
-                    }
-                </table>
-            </div>
+                <div class="form-group">
+                    <label asp-for="Name"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Description"></label>
+                    <textarea asp-for="Description" class="form-control" rows="2"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
 
-            <div class="form-group">
-                <label asp-for="Tags" class="control-label"></label>
-                <select class="MultipleCheckboxes" name="tags" multiple>
-                    @foreach (string t in GlobalTags.TAGS)
-                    {
-                        <option value="@t">@t</option>
-                    }
-                </select>
-            </div>
+                <div class="form-group form-row">
+                    <label asp-for="Location"></label>
+                    <div class="col">
+                        <input asp-for="Location.Country" class="form-control" placeholder="Country" />
+                        <span asp-validation-for="Location.Country" class="text-danger"></span>
+                    </div>
+                    <div class="col">
+                        <input asp-for="Location.City" class="form-control" placeholder="City" />
+                        <span asp-validation-for="Location.City" class="text-danger"></span>
+                    </div>
+                    <div class="col">
+                        <input asp-for="Location.Street" class="form-control" placeholder="Street" />
+                        <span asp-validation-for="Location.Street" class="text-danger"></span>
+                    </div>
+                    <div class="col">
+                        <input asp-for="Location.Number" class="form-control" placeholder="Number" />
+                        <span asp-validation-for="Location.Number" class="text-danger"></span>
+                    </div>
+                </div>
 
-            <div class="form-group">
-                <label asp-for="Chefs" class="control-label"></label>
-                <select class="MultipleCheckboxes" name="chefs" multiple>
-                    @foreach (Chef c in chefs)
-                    {
-                        <option value="@c.ChefID">@c.FirstName @c.LastName</option>
+                <div class="form-group">
+                    <label asp-for="OpeningHours"></label>
+                    <table id="openingHours" class="table table-borderless">
+                        @foreach (string day in GlobalWeek.WEEK)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="openingHours-day">
+                                        <input name="days" type="checkbox" class="form-check-input" value="@Html.DisplayName(day)" />@Html.DisplayName(day):
+                                        <input name="from" type="time" /> - <input name="to" type="time" />
+                                        <span hidden class="openingHoursErrors text-danger"></span>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
 
-                    }
-                </select>
-            </div>
+                <div class="form-group">
+                    <label asp-for="Tags"></label>
+                    <select class="MultipleCheckboxes" name="tags" multiple>
+                        @foreach (string t in GlobalTags.TAGS)
+                        {
+                            <option value="@t">@t</option>
+                        }
+                    </select>
+                </div>
 
-            <div class="form-group">
-                <label asp-for="Logo" class="control-label"></label>
-                <input name="logo" type="file" class="form-control-file" />
-            </div>
-            <div class="form-group">
-                <label asp-for="Photos" class="control-label"></label>
-                <input type="file" multiple name="photos" class="form-control-file" />
-            </div>
+                <div class="form-group">
+                    <label asp-for="Chefs"></label>
+                    <select class="MultipleCheckboxes" name="chefs" multiple>
+                        @foreach (Chef c in chefs)
+                        {
+                            <option value="@c.ChefID">@c.FirstName @c.LastName</option>
 
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+                        }
+                    </select>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col">
+                        <label asp-for="Logo"></label>
+                        <input name="logo" type="file" class="form-control-file" />
+                    </div>
+                    <div class="form-group col">
+                        <label asp-for="Photos"></label>
+                        <input name="photos" type="file" multiple class="form-control-file" />
+                    </div>
+                    <span hidden class="imageFileErrors text-danger col"></span>
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
 </div>
 
 @section Scripts {

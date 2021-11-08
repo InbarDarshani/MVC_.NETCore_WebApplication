@@ -95,7 +95,7 @@ namespace RateTheRest.Controllers
                 .FirstOrDefault(u => u.UserName == User.Identity.Name);
 
             _dbcontext.Add(review);
-            await _dbcontext.SaveChangesAsync();
+            _dbcontext.SaveChanges();
         
             //Update Retaurant's Rating
             review.Restaurant.Rating.Users.Add(review.User);
@@ -140,26 +140,6 @@ namespace RateTheRest.Controllers
             var user = review.User;
             Rating rating = restaurant.Rating;
             var chefs = _dbcontext.Chefs.Where(c => c.Restaurants.Contains(restaurant)).ToList();
-
-
-            ////Update rating parameters
-            //if (action == "delete")
-            //{
-            //    rating.SumOfVotes -= review.Score;
-            //    rating.NumOfVotes -= 1;
-            //    Rating.Score = rating.SumOfVotes / rating.NumOfVotes;
-            //}
-            //else
-            //{
-            //    rating.Users.Add(user);
-            //    rating.SumOfVotes += review.Score;
-            //    rating.NumOfVotes += 1;
-            //    Rating.Score = rating.SumOfVotes / rating.NumOfVotes;
-            //}
-
-            ////Update chefs rating related parameter
-            //foreach (Chef c in chefs)
-            //    c.AvgRate = c.Restaurants.Sum(r => r.Rating.Score) / c.Restaurants.ToList().Count;
         }
 
 

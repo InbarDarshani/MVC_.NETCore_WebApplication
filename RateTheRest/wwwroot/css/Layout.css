@@ -12,10 +12,6 @@
         font-size: 18px;
     }
 
-        .my-navbar .nav-link:hover {
-            color: LimeGreen;
-        }
-
 footer {
     background-color: #343a40 !important;
     color: white;

@@ -10,7 +10,7 @@ namespace RateTheRest.Additional
 {
     public static class GlobalTags
     {
-        public static readonly string[] TAGS = { "Kosher", "Vegan", "Meat", "Dairy" };
+        public static readonly string[] TAGS = { "Kosher", "Meat", "Dairy", "Vegan" };
     }
 
     public class Tag

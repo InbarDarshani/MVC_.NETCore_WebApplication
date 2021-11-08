@@ -10,7 +10,7 @@ namespace RateTheRest.Models
 {
     public class Chef
     {
-        public Chef() { this.Restaurants = new HashSet<Restaurant>(); }     //For the Many to Many Relation
+        //public Chef() { this.Restaurants = new HashSet<Restaurant>(); }     //For the Many to Many Relation
 
         public int ChefID { get; set; }
 
@@ -44,6 +44,6 @@ namespace RateTheRest.Models
 
         //Many(Restaurants)-to-Many(Chefs)
         [ValidateNever]
-        public virtual ICollection<Restaurant>? Restaurants { get; set; }
+        public virtual ICollection<Restaurant>? Restaurants { get; set; } = new HashSet<Restaurant>();
     }
 }
