@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using RateTheRest.Additional;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace RateTheRest.Data
 {

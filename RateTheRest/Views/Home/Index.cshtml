@@ -9,72 +9,78 @@
 <link rel="stylesheet" href="~/css/HomePage.css">
 
 <div class="container">
-
-    <h1>Welcome To RateTheRest</h1>
+    <div class="row mt-4 justify-content-center">
+        <h1>Welcome To RateTheRest</h1>
+    </div>
 
     <!--Top 5 Rated Restaurants start-->
-    <div class="row top-heading mt-5">
-        <div class="col-md-12">
-            <p>Top 5 Rated Restaurants</p>
+    <div class="row mt-4 justify-content-center">
+        <h2>Top 5 Rated Restaurants</h2>
+    </div>
+    <div class="row mt-4 justify-content-center card-deck">
+        <div class="col-4 card border-secondary">
+            <img src="@Url.Content(top5RatedRestaurants[0].Logo.Path)" class="card-img-top">
+            <div class="card-body">
+                <h3 class="card-title">@top5RatedRestaurants[0].Name</h3>
+                <p class="card-text">ADD DETAILS HERE</p>
+                <a href="@Url.Action("Details", "Restaurants", new { id = top5RatedRestaurants[0].RestaurantID })" class="btn btn-outline-dark">View More</a>
+            </div>
+        </div>
+
+        <div class="col-4 card border-secondary">
+            <img src="@Url.Content(top5RatedRestaurants[1].Logo.Path)" class="card-img-top">
+            <div class="card-body">
+                <h3 class="card-title">@top5RatedRestaurants[1].Name</h3>
+                <p class="card-text">ADD DETAILS HERE</p>
+                <a href="@Url.Action("Details", "Restaurants", new { id = top5RatedRestaurants[1].RestaurantID })" class="btn btn-outline-dark">View More</a>
+            </div>
+        </div>
+        <div class="col-4 card border-secondary">
+            <img src="@Url.Content(top5RatedRestaurants[2].Logo.Path)" class="card-img-top">
+            <div class="card-body">
+                <h3 class="card-title">@top5RatedRestaurants[2].Name</h3>
+                <p class="card-text">ADD DETAILS HERE</p>
+                <a href="@Url.Action("Details", "Restaurants", new { id = top5RatedRestaurants[2].RestaurantID })" class="btn btn-outline-dark">View More</a>
+            </div>
         </div>
     </div>
-
-    <div class="row mt-4">
-        <div class="col-sm-4">
-            <img src="@Url.Content(top5RatedRestaurants[0].Logo.Path)" class="img-fluid">
-            <h3 class="">@top5RatedRestaurants[0].Name</h3>
-            <div>ADD DETAILS</div>
-
-            <a href="@Url.Action("Details", "Restaurants", new { id = top5RatedRestaurants[0].RestaurantID })" class="btn btn-md">View More</a>
+    <div class="row mt-4 justify-content-center card-deck">
+        <div class="col-4 card border-secondary">
+            <img src="@Url.Content(top5RatedRestaurants[3].Logo.Path)" class="card-img-top">
+            <div class="card-body">
+                <h3 class="card-title">@top5RatedRestaurants[3].Name</h3>
+                <p class="card-text">ADD DETAILS HERE</p>
+                <a href="@Url.Action("Details", "Restaurants", new { id = top5RatedRestaurants[3].RestaurantID })" class="btn btn-outline-dark">View More</a>
+            </div>
         </div>
-
-        <div class="col-sm-4">
-            <img src="@Url.Content(top5RatedRestaurants[1].Logo.Path)" class="img-fluid">
-            <h3 class="">@top5RatedRestaurants[1].Name</h3>
-            <div>ADD DETAILS</div>
-
-            <a href="@Url.Action("Details", "Restaurants", new { id = top5RatedRestaurants[1].RestaurantID })" class="btn btn-md">View More</a>
-        </div>
-
-        <div class="col-sm-4">
-            <img src="@Url.Content(top5RatedRestaurants[2].Logo.Path)" class="img-fluid">
-            <h3 class="">@top5RatedRestaurants[2].Name</h3>
-            <div>ADD DETAILS</div>
-
-            <a href="@Url.Action("Details", "Restaurants", new { id = top5RatedRestaurants[2].RestaurantID })" class="btn btn-md">View More</a>
-        </div>
-    </div>
-
-    <div class="row mt-4">
-        <div class="col-sm-6">
-            <img src="@Url.Content(top5RatedRestaurants[3].Logo.Path)" class="img-fluid">
-            <h3 class="">@top5RatedRestaurants[3].Name</h3>
-            <div>ADD DETAILS</div>
-
-            <a href="@Url.Action("Details", "Restaurants", new { id = top5RatedRestaurants[3].RestaurantID })" class="btn btn-md">View More</a>
-        </div>
-        <div class="col-sm-6">
-            <img src="@Url.Content(top5RatedRestaurants[4].Logo.Path)" class="img-fluid">
-            <h3 class="">@top5RatedRestaurants[4].Name</h3>
-            <div>ADD DETAILS</div>
-
-            <a href="@Url.Action("Details", "Restaurants", new { id = top5RatedRestaurants[4].RestaurantID })" class="btn btn-md">View More</a>
+        <div class="col-4 card border-secondary">
+            <img src="@Url.Content(top5RatedRestaurants[4].Logo.Path)" class="card-img-top">
+            <div class="card-body">
+                <h3 class="card-title">@top5RatedRestaurants[4].Name</h3>
+                <p class="card-text">ADD DETAILS HERE</p>
+                <a href="@Url.Action("Details", "Restaurants", new { id = top5RatedRestaurants[4].RestaurantID })" class="btn btn-outline-dark">View More</a>
+            </div>
         </div>
     </div>
     <!--Top 5 Rated Restaurants end-->
     <!--Statistics Graphs starts-->
-    <div>
-        @*restaurant data for js statistics*@
-        @foreach (Restaurant r in restaurantsAndReviews)
-        {
-            <div hidden class="restaurants" name="@r.Name" numOfReviews="@r.Reviews.Count" ratingScore="@r.Rating.Score"></div>
-        }
+    @*restaurant data for js statistics*@
+    @foreach (Restaurant r in restaurantsAndReviews)
+    {
+        <div hidden class="restaurants" name="@r.Name" numOfReviews="@r.Reviews.Count" ratingScore="@r.Rating.Score"></div>
+    }
+    <div class="row mt-4 justify-content-center">
         <!--Restaurants by number of reviews-->
-        <h1>Restaurants By number Of Reviews</h1>
-        <div id="pieChartRestaurantsByNumberOfReviews"></div>
+        <div class="col-6">
+            <h3>Restaurants By Reviews</h3>
+            <div id="pieChartRestaurantsByNumberOfReviews"></div>
+        </div>
         <!--Restaurants by rating score-->
-        <h1>Restaurants By Rating</h1>
-        <div id="barChartRestaurantsByRatingScore"></div>
+        <div class="col-6">
+            <h3>Restaurants By Rating</h3>
+            <div id="barChartRestaurantsByRatingScore"></div>
+        </div>
     </div>
     <!--Statistics Graphs ends-->
+
 </div>

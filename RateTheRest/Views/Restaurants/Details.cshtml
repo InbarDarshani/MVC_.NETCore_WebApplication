@@ -122,12 +122,19 @@
                 @Html.DisplayFor(model => model.Rating.Score)
             </dd>
 
+            <dt class="col-sm-2">
+                <input type="hidden" id="restaurantIdValue" value="@Model.RestaurantID" />
+                <button type="button" id="createReview" class="btn btn-light">Create a Review</button>
+            </dt>
+            <dd class="col-sm-10">
+                <div id="createReviewPartial"></div>
+            </dd>
 
             @if (Model.Reviews.Count > 0)
             {
                 <dt class="col-sm-2">
                     @Html.DisplayNameFor(model => model.Reviews)
-                    <button type="button" id="createReview" class="btn btn-light">Create a Review</button>
+
                 </dt>
                 <dd class="col-sm-10">
                     <table class="table table-bordered">
@@ -147,10 +154,8 @@
                     </table>
                 </dd>
             }
-            <dd class="col-sm-10">
-                <input type="hidden" id="restaurantIdValue" value="@Model.RestaurantID" />
-                <div id="createReviewPartial"></div>
-            </dd>
+
+
 
             @if (Model.Photos != null && Model.Photos.Count > 0)
             {
