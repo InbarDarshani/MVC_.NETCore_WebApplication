@@ -2,7 +2,8 @@
     ViewData["Title"] = "Home Page";
     var top5RatedRestaurants = (Restaurant[])ViewData["Top5RatedRestaurants"];
     var restaurantsAndReviews = (Restaurant[])ViewData["RestaurantsAndReviews"];
-    var restaurantsGroupedByTags = ViewData["RestaurantsGroupedByTags"];
+    var usersByNumOfReviews = (List<Tuple<string, int>>)ViewData["UsersByNumOfReviews"];
+    int rank = 1;
 }
 
 <script defer type="module" src="~/js/HomePage.js"></script>
@@ -82,5 +83,24 @@
         </div>
     </div>
     <!--Statistics Graphs ends-->
-
+    <!--Users by number of reviews-->
+    <div class="row mt-4 justify-content-center">
+        <div class="col-6">
+            <h3>Our Top Raters</h3>
+            <div id="leaderboards">
+                <ul class="toplist">
+                    @foreach (var user in usersByNumOfReviews)
+                    {
+                        <li data-rank="@rank">
+                            <div class="thumb">
+                                <span class="name">@user.Item1</span>
+                                <span class="stat"><b>@user.Item2</b>Reviews</span>
+                            </div>
+                        </li>
+                        rank++;
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>

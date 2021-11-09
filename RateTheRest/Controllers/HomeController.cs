@@ -35,6 +35,13 @@ namespace RateTheRest.Controllers
             ViewData["RestaurantsAndReviews"] = _dbcontext.Restaurants
                 .Include(r => r.Reviews).ThenInclude(r => r.User).ToArray();
 
+            ViewData["UsersByNumOfReviews"] = (from r in _dbcontext.Reviews.ToList()
+                                               join u in _dbcontext.Users.ToList()
+                                               on r.User.Id equals u.Id 
+                                               group r by r.User.Id into reviewsPerUser
+                                               orderby reviewsPerUser.Count() descending
+                                               select new Tuple<string, int>(reviewsPerUser.Select(r => r.User.FullName).First(), reviewsPerUser.Count())).ToList();
+
             return View();
         }
 

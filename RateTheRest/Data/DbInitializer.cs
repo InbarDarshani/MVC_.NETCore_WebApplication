@@ -18,46 +18,33 @@ namespace RateTheRest.Data
             if (context.Restaurants.Any() && context.Chefs.Any() && context.Users.Any())
                 return;
 
+            //Restaurants
             var restaurants = new Restaurant[]
             {
                 //Eyal Shani
                 new Restaurant { Name = "Malka",
-                    Location = new Location { Country = "Israel", City = "Tel Aviv", Street = "Dafna", Number = 2 },
-                    },
-
+                    Location = new Location { Country = "Israel", City = "Tel Aviv", Street = "Dafna", Number = 2 }},
                 new Restaurant { Name = "Miznon",
-                    Location = new Location { Country = "Israel", City = "Tel Aviv", Street = "Shlomo Ibn Gabirol", Number = 23 },
-                    },
-
+                    Location = new Location { Country = "Israel", City = "Tel Aviv", Street = "Shlomo Ibn Gabirol", Number = 23 }},
                 //Meir Adoni
                 new Restaurant { Name = "Dunya",
-                    Location = new Location { Country = "Israel", City = "Ashkelon", Street = "HaNamal ", Number = 9 },
-                    },
-
+                    Location = new Location { Country = "Israel", City = "Ashkelon", Street = "HaNamal ", Number = 9 }},
                 //Assaf Granit
                 new Restaurant { Name = "Machneyuda",
-                    Location = new Location { Country = "Israel", City = "Jerusalem", Street = "Beit Ya'akov", Number = 10 },
-                    },
-
+                    Location = new Location { Country = "Israel", City = "Jerusalem", Street = "Beit Ya'akov", Number = 10 }},
                 new Restaurant { Name = "Yudale",
-                    Location = new Location { Country = "Israel", City = "Jerusalem", Street = "Beit Ya'akov", Number = 11 },
-                    },
-
+                    Location = new Location { Country = "Israel", City = "Jerusalem", Street = "Beit Ya'akov", Number = 11 }},
                 new Restaurant { Name = "Hasadna",
-                    Location = new Location { Country = "Israel", City = "Jerusalem", Street = "Hebron road", Number = 28 },
-                    },
-
+                    Location = new Location { Country = "Israel", City = "Jerusalem", Street = "Hebron road", Number = 28 }},
                 new Restaurant { Name = "The Palomar",
-                    Location = new Location { Country = "UK", City = "London", Street = "Rupert", Number = 34 },
-                    },
-
+                    Location = new Location { Country = "UK", City = "London", Street = "Rupert", Number = 34 }},
                 new Restaurant { Name = "Shabour",
-                    Location = new Location { Country = "France", City = "Paris", Street = "Rue Saint-Sauveur", Number = 19 },
-                    }
+                    Location = new Location { Country = "France", City = "Paris", Street = "Rue Saint-Sauveur", Number = 19 }}
             };
             foreach (Restaurant r in restaurants) { context.Restaurants.Add(r); }
             context.SaveChanges();
 
+            //Chefs
             var chefs = new Chef[]
             {
                 new Chef { FirstName = "Israel", LastName = "Aharoni" },
@@ -69,6 +56,7 @@ namespace RateTheRest.Data
             foreach (Chef c in chefs) { context.Chefs.Add(c); }
             context.SaveChanges();
 
+            //Users
             var users = new ApplicationUser[]
             {
                 new ApplicationUser { FirstName = "Admin", LastName = "User", UserName = "Admin@walla.com", Email = "Admin@walla.com",
@@ -76,22 +64,46 @@ namespace RateTheRest.Data
                                       PasswordHash = "AQAAAAEAACcQAAAAEE33VlUuAC1IRJLdFJoOAkFpFeLMwd4WJQyk3OCkeNXK+RGZiur8gLuj17leZOLPGQ==",
                                       SecurityStamp = "C2DDJCG2JMPGW7Y4EZXEKAXTLYB7UR5H",
                                       ConcurrencyStamp = "3282148d-fa28-4e94-a8d8-708084d66030"},
-
                 new ApplicationUser { FirstName = "Basic", LastName = "User", UserName = "Basic@walla.com", Email = "Basic@walla.com",
                                       NormalizedUserName="BASIC@WALLA.COM", NormalizedEmail = "BASIC@WALLA.COM",
                                       PasswordHash = "AQAAAAEAACcQAAAAEL0NHZ4TI17+dZMjnP9p1SMmUtoTC5dvKmN4eh1VuGClSm6Q5UO6AldjHeSemT2Wmg==",
                                       SecurityStamp = "KA5LLP5OYMZU43VIU6QJODEWL44SU6UA",
-                                      ConcurrencyStamp = "262459cc-ec2b-4dab-8848-61754de853d2" }
+                                      ConcurrencyStamp = "262459cc-ec2b-4dab-8848-61754de853d2" },
+                new ApplicationUser { FirstName = "Alona", LastName = "Tal", UserName = "Alona@gmail.com", Email = "Alona@gmail.com",
+                                      NormalizedUserName="ALONA@GMAIL.COM", NormalizedEmail = "ALONA@GMAIL.COM",
+                                      PasswordHash = "AQAAAAEAACcQAAAAEI0OT6ySr0Pbd5RQjf4B4FRy/5xlUXjK/mVZ8artpPHJqDwQ908ARf7UIASgbv0SYw==",
+                                      SecurityStamp = "W7BRV46WRYMUGULJ5C4BWU5IM7N722DW",
+                                      ConcurrencyStamp = "36476d49-263e-41f3-adbf-20e57693ca94" },
+                new ApplicationUser { FirstName = "Kobi", LastName = "Farag", UserName = "Kobi@gmail.com", Email = "Kobi@gmail.com",
+                                      NormalizedUserName="KOBI@GMAIL.COM", NormalizedEmail = "KOBI@GMAIL.COM",
+                                      PasswordHash = "AQAAAAEAACcQAAAAEADUk9JtPqYdJIC43+0SfYwRgCdSLHkIZdaYn2ZtR58Zo6IPmVHyNMueBd5nELtTRg==",
+                                      SecurityStamp = "IVTWFAIJCSAQZXHV65I2P6D5VUBW5CJO",
+                                      ConcurrencyStamp = "8425a5dd-8034-41e2-9732-4e593af671e1" },
+                new ApplicationUser { FirstName = "Ilan", LastName = "Rozenfeld", UserName = "Ilan@gmail.com", Email = "Ilan@gmail.com",
+                                      NormalizedUserName="ILAN@GMAIL.COM", NormalizedEmail = "ILAN@GMAIL.COM",
+                                      PasswordHash = "AQAAAAEAACcQAAAAEH8VBSo9eZdHi6KPCA/QaiW40n/R42rh0GvcNPlCHzfnv7tiNxNIhizUYtGPp57psQ==",
+                                      SecurityStamp = "FN6VJZRRILZVDAPPJPCUCS42SES6GPYI",
+                                      ConcurrencyStamp = "5926e998-8b75-448e-920a-684c3c149d82" },
+                new ApplicationUser { FirstName = "Oded", LastName = "Paz", UserName = "Oded@gmail.com", Email = "Oded@gmail.com",
+                                      NormalizedUserName="ODED@GMAIL.COM", NormalizedEmail = "ODED@GMAIL.COM",
+                                      PasswordHash = "AQAAAAEAACcQAAAAEPscTRY6qLrbYZ3DCh0gaDXdkzdFUngjLsmAB52adnUM0/DKlbVjDgb4dtqHcPgnkQ==",
+                                      SecurityStamp = "KNXZL4D5DYGTF3FEWQO22LITDBYYCMDO",
+                                      ConcurrencyStamp = "42a43e46-5a1d-4751-8c9a-c2a739a208df" }
             };
             foreach (ApplicationUser u in users) { context.Users.Add(u); }
             context.SaveChanges();
 
+            //Random values for restaurants
             foreach (Restaurant restaurant in restaurants)
             {
-                //Create reviews with random score
                 var rand = new Random();
+
+                //Create reviews with random score and random user
                 for (int i = 0; i < rand.Next(20, 50); i++)
-                    createReview(new Review(), rand.Next(0, 11), restaurant.RestaurantID, "Basic@walla.com");
+                {
+                    int randomUser = rand.Next(0, users.Length);
+                    createReview(new Review(), rand.Next(0, 11), restaurant.RestaurantID, users[randomUser].Email);
+                }
 
                 //Set opening hours on random days
                 int randomDay = rand.Next(0, 7);
@@ -175,7 +187,7 @@ namespace RateTheRest.Data
             chefs[2].Portrait = new PortraitFile { FileName = "Portrait", Path = "~/dbInitialize/Chefs/MeirAdoni.jpg" };
             chefs[3].Portrait = new PortraitFile { FileName = "Portrait", Path = "~/dbInitialize/Chefs/AssafGranit.jpg" };
             chefs[4].Portrait = new PortraitFile { FileName = "Portrait", Path = "~/dbInitialize/Chefs/MoshikRoth.jpg" };
-                                   
+
             context.SaveChanges();
 
             void createReview(Review review, int score, int restaurantId, string username)
