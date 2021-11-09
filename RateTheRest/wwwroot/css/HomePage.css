@@ -2,27 +2,106 @@
     height: 100%;
     width: 100%;
 }
-
 .my-navbar {
     background-color: #343a40 !important;
 }
-
     .my-navbar .nav-link {
         color: #ffffff;
         font-size: 18px;
     }
 
-        .my-navbar .nav-link:hover {
-            color: LimeGreen;
-        }
-
-#home {
-    background-image: url(images/Cover.png);
-    background-position: center center;
-    background-attachment: fixed;
-    background-size: cover;
-    width: 100%;
-    height: 100%;
+/*Top voters table*/
+#leaderboards > * {
+    position: relative;
+    font-size: 14px;
+    display: inline-block;
 }
 
+#leaderboards .toplist {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    width: 70%;
+    float: right;
+}
+
+    #leaderboards .toplist li {
+        background: white;
+        border-radius: 6px;
+        margin-bottom: 14px;
+        box-shadow: 0 4px #C2C2C2;
+        position: relative;
+        cursor: pointer;
+    }
+
+        #leaderboards .toplist li .thumb {
+            padding: 20px 20px 19px;
+            font-weight: bold;
+            font-size: 0;
+            line-height: 36px;
+            position: relative;
+        }
+
+            #leaderboards .toplist li .thumb span {
+                display: inline-block;
+                vertical-align: middle;
+                font-size: 15px;
+            }
+
+            #leaderboards .toplist li .thumb .stat {
+                position: absolute;
+                top: 26px;
+                right: 90px;
+                line-height: 16px;
+                text-transform: uppercase;
+                text-align: center;
+                font-size: 10px;
+            }
+
+                #leaderboards .toplist li .thumb .stat b {
+                    display: block;
+                    font-size: 20px;
+                    margin: 0;
+                }
+
+        #leaderboards .toplist li:after {
+            content: attr(data-rank);
+            position: absolute;
+            top: 0;
+            right: 0;
+            float: right;
+            background: #EAEAEA;
+            height: 75px;
+            width: 75px;
+            display: block;
+            text-align: center;
+            line-height: 75px;
+            font-size: 16px;
+            color: #666;
+            font-weight: bold;
+            border-top-right-radius: 6px;
+            border-bottom-right-radius: 6px;
+            box-shadow: 0 4px rgba(0,0,0,0.05);
+        }
+
+        #leaderboards .toplist li[data-rank="1"]:after,
+        #leaderboards .toplist li[data-rank="2"]:after,
+        #leaderboards .toplist li[data-rank="3"]:after {
+            font-size: 24px;
+            font-style: normal;
+            font-weight: normal;
+            line-height: 77px;
+        }
+
+        #leaderboards .toplist li[data-rank="1"]:after {
+            color: #e0aa03;
+        }
+
+        #leaderboards .toplist li[data-rank="2"]:after {
+            color: #9A9A9A;
+        }
+
+        #leaderboards .toplist li[data-rank="3"]:after {
+            color: #CC913C;
+        }
 

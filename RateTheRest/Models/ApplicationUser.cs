@@ -18,6 +18,8 @@ namespace RateTheRest.Models
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
+        public string FullName => $"{FirstName} {LastName}";
+
         //Relations
 
         //One(User)-to-Many(Review)
