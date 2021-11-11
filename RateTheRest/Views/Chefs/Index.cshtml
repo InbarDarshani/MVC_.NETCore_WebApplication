@@ -72,14 +72,14 @@
                             <td>
                                 @if (item.Portrait != null)
                                 {
-                                    <a href="/Restaurants/Details/@item.ChefID">
+                                    <a href="/Chefs/Details/@item.ChefID">
                                         <img src="@Url.Content(item.Portrait.Path)" alt="Logo" class="img-thumbnail" width="100" height="100">
                                     </a>
                                 }
                             </td>
 
                             <td>
-                                <a href="/Restaurants/Details/@item.ChefID">
+                                <a href="/Chefs/Details/@item.ChefID">
                                     @Html.DisplayFor(modelItem => item.FirstName) @Html.DisplayFor(modelItem => item.LastName)
                                 </a>
                             </td>
