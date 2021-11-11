@@ -194,6 +194,7 @@ namespace RateTheRest.Controllers
         //_________________________________________________________
 
         // GET: Chefs/Delete/5
+        [Authorize(Policy = "RequireAdmin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
