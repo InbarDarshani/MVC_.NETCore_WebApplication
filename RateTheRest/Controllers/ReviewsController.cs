@@ -114,7 +114,7 @@ namespace RateTheRest.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var review = await _dbcontext.Reviews
-                .Include(r => r.Restaurant)
+                .Include(r => r.Restaurant).ThenInclude(r => r.Rating).ThenInclude(r => r.Users)
                 .Include(r => r.User)
                 .FirstOrDefaultAsync(m => m.ReviewID == id);
 
