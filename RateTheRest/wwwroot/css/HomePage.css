@@ -10,6 +10,149 @@
         font-size: 18px;
     }
 
+.welcome-header {
+    text-align: center;
+    text-shadow: 2px 2px 8px #0f0f0f;
+}
+
+.home-page-description {
+    display: flex;
+    margin: 50px 0px 50px 0px;
+    height: 150px;
+}
+
+section {
+    width: 63%;
+    margin-right: 50px;
+}
+
+.home-page-description h5  {
+    text-align: center;
+}
+
+@font-face {
+    font-family: restFont;
+    src: url(sansation_light.woff);
+}
+
+.multi-col {
+    column-count: 2;
+    font-family: restFont;
+}
+
+aside {
+    position: center;
+    margin-left: 120px;
+}
+
+.rest-video {
+    width: 160px;
+    height: 120px;
+    transition: width 2s, height 2s;
+}
+
+.rest-video:hover {
+    width: 200px;
+    height: 150px;
+}
+
+
+ .top5-header {
+    text-align: center;
+}
+
+.rest-num {
+    text-align: center;
+}
+
+#one {
+    color: #e0aa03;
+}
+
+#two {
+    color: #9A9A9A;
+}
+
+#three {
+    color: #CC913C;
+}
+
+.top5-rest {
+    display: flex;
+    justify-content: space-between;
+    justify-content: center;
+}
+
+.rest {
+    color: #000;
+    font: inherit;
+    vertical-align: baseline;
+    border: 7px #dedbdb solid;
+    margin: 0 8px 16px 8px;
+    float: none;
+    height: auto;
+    padding: 10px;
+    margin-bottom: 3px;
+}
+
+.rest-img{
+    color: #000;
+    font: inherit;
+    border: 0;
+    margin: 0;
+    vertical-align: baseline;
+    padding: 10px 5px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 14px;
+    overflow: hidden;
+    width: 100px;
+    height: 100px;
+    float: none;
+}
+
+.rest-link {
+    list-style: none;
+    text-align: center;
+    font: inherit;
+    padding: 0;
+    border: 0;
+    margin: 0;
+    vertical-align: baseline;
+    color: #000;
+    text-decoration: none;
+    line-height: 22px;
+    border-top: 2px #000 solid;
+    border-bottom: 2px #000 solid;
+    display: block;
+    background: #e5e5e5;
+    font-weight: bold;
+}
+
+.stat-header{
+    text-align: center;
+}
+
+.rest-statistics {
+    display: flex;
+    margin-top: 100px;
+}
+
+.rest-by-review {
+    width: 30%;
+    padding-right: 30px;
+}
+
+
+.rest-by-rate {
+    width: 30%;
+    padding-right: 30px;
+}
+
+.top-raters{
+    width: 30%;
+}
+
 /*Top voters table*/
 #leaderboards > * {
     position: relative;
@@ -18,15 +161,14 @@
 }
 
 #leaderboards .toplist {
-    padding: 0;
-    margin: 0;
     list-style: none;
-    width: 70%;
     float: right;
+    width: 300px;
 }
 
     #leaderboards .toplist li {
         background: white;
+        width: 300px;
         border-radius: 6px;
         margin-bottom: 14px;
         box-shadow: 0 4px #C2C2C2;
@@ -104,4 +246,3 @@
         #leaderboards .toplist li[data-rank="3"]:after {
             color: #CC913C;
         }
-

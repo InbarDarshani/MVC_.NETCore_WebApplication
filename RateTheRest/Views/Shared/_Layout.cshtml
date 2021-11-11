@@ -26,28 +26,30 @@
 
 <body>
     <!--navbar start-->
-    <nav class="my-navbar navbar fixed-top navbar-expand-lg navbar-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="@Url.Action("Index", "Home")"><img width="100" src="~/images/logo.png"></a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main_nav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse flex-row-reverse" id="main_nav">
-                <partial name="_LoginPartial" />
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-controller="Restaurants" asp-action="Index">Restaurants</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-controller="Chefs" asp-action="Index">Chefs</a>
-                    </li>
-                </ul>
+    <header>
+        <nav class="my-navbar navbar fixed-top navbar-expand-lg navbar-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="@Url.Action("Index", "Home")"><img width="100" src="~/images/logo.png"></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main_nav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse flex-row-reverse" id="main_nav">
+                    <partial name="_LoginPartial" />
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Restaurants" asp-action="Index">Restaurants</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Chefs" asp-action="Index">Chefs</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
-        </div>
-    </nav>
+        </nav>
+    </header>
     <!-- navbar end-->
     <!--Relevant view page-->
     <main role="main" class="renderBody">
@@ -56,8 +58,8 @@
 
     <!--footer start-->
     <footer class="container-fluid mt-4 pt-3 pb-3">
-        <div class="row">
-            <div class="col-4 offset-5">Designed by Inbar, Heli, Linoy and Aviv</div>
+        <div class="canvas">
+            <canvas id="myCanvas" width="400" height="50"></canvas>
         </div>
     </footer>
     <!-- footer end-->

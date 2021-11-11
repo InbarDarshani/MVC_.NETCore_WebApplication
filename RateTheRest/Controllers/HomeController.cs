@@ -40,7 +40,7 @@ namespace RateTheRest.Controllers
                                                on r.User.Id equals u.Id 
                                                group r by r.User.Id into reviewsPerUser
                                                orderby reviewsPerUser.Count() descending
-                                               select new Tuple<string, int>(reviewsPerUser.Select(r => r.User.FullName).First(), reviewsPerUser.Count())).ToList();
+                                               select new Tuple<string, int>(reviewsPerUser.Select(r => r.User.FullName).First(), reviewsPerUser.Count())).Take(3).ToList();
 
             return View();
         }
