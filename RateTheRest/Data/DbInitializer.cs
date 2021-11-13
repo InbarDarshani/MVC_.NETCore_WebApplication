@@ -106,22 +106,22 @@ namespace RateTheRest.Data
                 }
 
                 //Set opening hours on random days
-                int randomDay = rand.Next(0, 7);
-                restaurant.OpeningHours.ElementAt(randomDay).Open = true;
-                restaurant.OpeningHours.ElementAt(randomDay).From = new DateTime(2021, 01, 01, 9, 0, 0);
-                restaurant.OpeningHours.ElementAt(randomDay).To = new DateTime(2021, 01, 01, 22, 0, 0);
-                randomDay = rand.Next(0, 7);
-                restaurant.OpeningHours.ElementAt(randomDay).Open = true;
-                restaurant.OpeningHours.ElementAt(randomDay).From = new DateTime(2021, 01, 01, 11, 0, 0);
-                restaurant.OpeningHours.ElementAt(randomDay).To = new DateTime(2021, 01, 01, 23, 0, 0);
-                randomDay = rand.Next(0, 7);
-                restaurant.OpeningHours.ElementAt(randomDay).Open = true;
-                restaurant.OpeningHours.ElementAt(randomDay).From = new DateTime(2021, 01, 01, 10, 0, 0);
-                restaurant.OpeningHours.ElementAt(randomDay).To = new DateTime(2021, 01, 01, 22, 0, 0);
-                randomDay = rand.Next(0, 7);
-                restaurant.OpeningHours.ElementAt(randomDay).Open = true;
-                restaurant.OpeningHours.ElementAt(randomDay).From = new DateTime(2021, 01, 01, 9, 0, 0);
-                restaurant.OpeningHours.ElementAt(randomDay).To = new DateTime(2021, 01, 01, 23, 59, 0);
+                int randomDay = rand.Next(0, 4);
+                restaurant.OpeningHours.Add(new OpeningHours
+                {
+                    DayOfWeek = GlobalWeek.WEEK[randomDay],
+                    Open = true,
+                    From = new DateTime(2021, 01, 01, 9, 0, 0),
+                    To = new DateTime(2021, 01, 01, 22, 0, 0)
+                });
+                randomDay = rand.Next(4, 7);
+                restaurant.OpeningHours.Add(new OpeningHours
+                {
+                    DayOfWeek = GlobalWeek.WEEK[randomDay],
+                    Open = true,
+                    From = new DateTime(2021, 01, 01, 10, 0, 0),
+                    To = new DateTime(2021, 01, 01, 22, 0, 0)
+                });
 
                 //Add random tags
                 ICollection<Tag> tags = new List<Tag>();

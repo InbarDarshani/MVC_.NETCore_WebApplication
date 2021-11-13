@@ -16,8 +16,6 @@ namespace RateTheRest.Models
 {
 	public class Restaurant
 	{
-		//public Restaurant() { this.Chefs = new HashSet<Chef>(); }     //For the Many to Many Relation
-
 		public int RestaurantID { get; set; }
 
 		[Required]
@@ -31,19 +29,10 @@ namespace RateTheRest.Models
 		[ValidateNever]
 		public virtual Location Location { get; set; }
 
-		//One(Restaurant)-to-Many(OpeningHours)
-		[ValidateNever]
-		[Display(Name = "Opening Hours")]
-		public ICollection<OpeningHours> OpeningHours { get; set; } = new List<OpeningHours>()
-		{
-		    new OpeningHours { DayOfWeek = "Sunday", Open = false },
-			new OpeningHours { DayOfWeek = "Monday", Open = false },
-			new OpeningHours { DayOfWeek = "Tuesday", Open = false },
-			new OpeningHours { DayOfWeek = "Wednesday", Open = false },
-			new OpeningHours { DayOfWeek = "Thursday", Open = false },
-			new OpeningHours { DayOfWeek = "Friday", Open = false },
-			new OpeningHours { DayOfWeek = "Saturday", Open = false },
-		};
+        //One(Restaurant)-to-Many(OpeningHours)
+        [ValidateNever]
+        [Display(Name = "Opening Hours")]
+        public ICollection<OpeningHours> OpeningHours { get; set; } = new List<OpeningHours>();
 
 		//One(Restaurant)-to-Many(Tags)
 		[ValidateNever]

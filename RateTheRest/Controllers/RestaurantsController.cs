@@ -89,7 +89,6 @@ namespace RateTheRest.Controllers
                                               on r.RestaurantID equals oh.Restaurant.RestaurantID
                                               where oh.Open == true && oh.DayOfWeek == sb.searchString
                                               select r;
-
                                 break;
                             }
                         case "Rating":
@@ -188,9 +187,6 @@ namespace RateTheRest.Controllers
             //Update chefs list (nullable)
             if (chefs.Count > 0)
                 restaurant.Chefs = UpdateChefs(chefs);
-
-            //Check binding and valudation                         
-            //if (!ModelState.IsValid) return View(restaurant);
 
             //Add to db
             _dbcontext.Add(restaurant);
@@ -294,9 +290,6 @@ namespace RateTheRest.Controllers
                 else
                     throw;
             }
-
-            //Check binding and valudation
-            //if (!ModelState.IsValid) return View(restaurant);
 
             return RedirectToAction(nameof(Index));
         }

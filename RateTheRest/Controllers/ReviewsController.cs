@@ -96,7 +96,7 @@ namespace RateTheRest.Controllers
 
             _dbcontext.Add(review);
             _dbcontext.SaveChanges();
-        
+
             //Update Retaurant's Rating
             review.Restaurant.Rating.Users.Add(review.User);
             review.Restaurant.Rating.Score = review.Restaurant.Rating.calcScore();
@@ -113,18 +113,31 @@ namespace RateTheRest.Controllers
         //[Authorize] - No need 
         public async Task<IActionResult> Delete(int id)
         {
-            var review = await _dbcontext.Reviews
-                .Include(r => r.Restaurant).ThenInclude(r => r.Rating).ThenInclude(r => r.Users)
-                .Include(r => r.User)
-                .FirstOrDefaultAsync(m => m.ReviewID == id);
+            var review = _dbcontext.Reviews
+                .Include(r => r.Restaurant)
+                .FirstOrDefault(m => m.ReviewID == id);
 
-            _dbcontext.Reviews.Remove(review);
-            await _dbcontext.SaveChangesAsync();
+            var restaurant = await _dbcontext.Restaurants          //Include db tables
+                .Include(r => r.Location)
+                .Include(r => r.OpeningHours)
+                .Include(r => r.Tags)
+                .Include(r => r.Logo)
+                .Include(r => r.Photos)
+                .Include(r => r.Rating).ThenInclude(r => r.Users)
+                .Include(r => r.Reviews).ThenInclude(r => r.User)
+                .Include(r => r.Chefs)
+                .FirstOrDefaultAsync(m => m.RestaurantID == review.Restaurant.RestaurantID);
 
-            //Update Retaurant's Rating
-            review.Restaurant.Rating.Users.Remove(review.User);
-            review.Restaurant.Rating.Score = review.Restaurant.Rating.calcScore();
-            await _dbcontext.SaveChangesAsync();
+            var user = _dbcontext.Users
+                .Include(u => u.Rating).ThenInclude(r => r.Restaurant)
+                .FirstOrDefault(u => u.UserName == User.Identity.Name);
+
+            restaurant.Reviews.Remove(review);
+            user.Reviews.Remove(review);
+            _dbcontext.SaveChanges();
+
+            restaurant.Rating.Score = restaurant.Rating.calcScore();
+            _dbcontext.SaveChanges();
 
             return RedirectToAction("Index", new { username = User.Identity.Name });
         }

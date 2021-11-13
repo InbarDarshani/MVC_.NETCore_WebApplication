@@ -32,7 +32,7 @@ section {
 
 @font-face {
     font-family: restFont;
-    src: url(sansation_light.woff);
+    src: url(/css/SansationLight.ttf);
 }
 
 .multi-col {
@@ -65,15 +65,15 @@ aside {
     text-align: center;
 }
 
-#one {
+#rest1 {
     color: #e0aa03;
 }
 
-#two {
+#rest2 {
     color: #9A9A9A;
 }
 
-#three {
+#rest3 {
     color: #CC913C;
 }
 

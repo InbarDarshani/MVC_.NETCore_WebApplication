@@ -33,6 +33,7 @@ namespace RateTheRest.Controllers
                 .OrderByDescending(r => r.Rating.Score).Take(5).ToArray();
 
             ViewData["RestaurantsAndReviews"] = _dbcontext.Restaurants
+                .Include(r => r.Rating)
                 .Include(r => r.Reviews).ThenInclude(r => r.User).ToArray();
 
             ViewData["UsersByNumOfReviews"] = (from r in _dbcontext.Reviews.ToList()

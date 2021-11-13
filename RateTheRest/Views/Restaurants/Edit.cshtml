@@ -34,19 +34,19 @@
                 <div class="form-group form-row">
                     <label asp-for="Location"></label>
                     <div class="col">
-                        <input asp-for="Location.Country" class="form-control"/>
+                        <input asp-for="Location.Country" class="form-control" />
                         <span asp-validation-for="Location.Country" class="text-danger"></span>
                     </div>
                     <div class="col">
-                        <input asp-for="Location.City" class="form-control"/>
+                        <input asp-for="Location.City" class="form-control" />
                         <span asp-validation-for="Location.City" class="text-danger"></span>
                     </div>
                     <div class="col">
-                        <input asp-for="Location.Street" class="form-control"/>
+                        <input asp-for="Location.Street" class="form-control" />
                         <span asp-validation-for="Location.Street" class="text-danger"></span>
                     </div>
                     <div class="col">
-                        <input asp-for="Location.Number" class="form-control"/>
+                        <input asp-for="Location.Number" class="form-control" />
                         <span asp-validation-for="Location.Number" class="text-danger"></span>
                     </div>
                 </div>
@@ -54,15 +54,25 @@
                 <div class="form-group">
                     <label></label>
                     <table id="openingHours" class="table table-borderless">
-                        @foreach (OpeningHours day in Model.OpeningHours)
+                        @foreach (string day in GlobalWeek.WEEK)
                         {
                             <tr>
                                 <td>
                                     <div class="openingHours-day">
-                                        <input name="days" type="checkbox" class="form-check-input" checked="@day.Open" value="@day.DayOfWeek" />@day.DayOfWeek:
-                                        <input name="from" type="time" value="@day.From.GetValueOrDefault().ToString("HH:mm")" /> - <input name="to" type="time" value="@day.To.GetValueOrDefault().ToString("HH:mm")" />
+                                        @{var dayExists = Model.OpeningHours.Where(o => o.DayOfWeek == day).FirstOrDefault();}
+                                        @if (dayExists != null)
+                                        {
+                                            <input name="days" type="checkbox" class="form-check-input" checked="@dayExists.Open" value="@dayExists.DayOfWeek" />@dayExists.DayOfWeek@(":")
+                                            <input name="from" type="time" value="@dayExists.From.GetValueOrDefault().ToString("HH:mm")" /> @("-") <input name="to" type="time" value="@dayExists.To.GetValueOrDefault().ToString("HH:mm")" />
+                                            <span hidden class="openingHoursErrors text-danger"></span>
+                                        }
+                                        else
+                                        {
+                                            <input name="days" type="checkbox" class="form-check-input" value="@Html.DisplayName(day)" />@Html.DisplayName(day)@(":")
+                                            <input name="from" type="time" /> @("-") <input name="to" type="time" />
+                                            <span hidden class="openingHoursErrors text-danger"></span>
+                                        }
                                     </div>
-                                    <span hidden class="openingHoursErrors text-danger"></span>
                                 </td>
                             </tr>
                         }
@@ -124,7 +134,7 @@
                     </div>
                     <span hidden class="imageFileErrors text-danger col"></span>
                 </div>
-                
+
                 <div class="form-group">
                     <input type="submit" value="Save" class="btn btn-primary" />
                 </div>

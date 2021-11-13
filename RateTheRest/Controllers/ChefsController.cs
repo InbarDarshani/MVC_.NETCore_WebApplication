@@ -115,9 +115,6 @@ namespace RateTheRest.Controllers
             if (restaurants.Count > 0)
                 chef.Restaurants = UpdateRestaurants(restaurants, chef.ChefID);
 
-            //Check binding and valudation
-            //if (!ModelState.IsValid) return View(chef);
-
             _dbcontext.Add(chef);
             await _dbcontext.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -185,9 +182,6 @@ namespace RateTheRest.Controllers
                 else
                     throw;
             }
-
-            //Check binding and valudation
-            //if (!ModelState.IsValid) return View(chef);
 
             return RedirectToAction(nameof(Index));
         }

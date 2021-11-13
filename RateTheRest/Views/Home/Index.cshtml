@@ -4,6 +4,7 @@
     var restaurantsAndReviews = (Restaurant[])ViewData["RestaurantsAndReviews"];
     var usersByNumOfReviews = (List<Tuple<string, int>>)ViewData["UsersByNumOfReviews"];
     int rank = 1;
+
 }
 
 <script defer type="module" src="~/js/HomePage.js"></script>
@@ -36,54 +37,22 @@
 
     </div>
 
-
     <!--Top 5 Rated Restaurants start-->
     <div class="top5-header">
-        <h2>Top 5 Rated Restaurants</h2>
+        <h2>Top Rated Restaurants</h2>
     </div>
 
     <div class="top5-rest">
-
-        <div class="rest">
-            <h5 class="rest-num" id="one">1</h5>
-            <img src="@Url.Content(top5RatedRestaurants[0].Logo.Path)" class="rest-img">
-            <div>
-                <a href="@Url.Action("Details", "Restaurants", new { id = top5RatedRestaurants[0].RestaurantID })" class="rest-link">View More</a>
+        @for (int i = 0; i < top5RatedRestaurants.Length; i++)
+        {
+            <div class="rest">
+                <h5 class="rest-num" id="rest@(i+1)">@(i + 1)</h5>
+                <img src="@Url.Content(top5RatedRestaurants[i].Logo.Path)" class="rest-img">
+                <div>
+                    <a href="@Url.Action("Details", "Restaurants", new { id = top5RatedRestaurants[i].RestaurantID })" class="rest-link">View More</a>
+                </div>
             </div>
-        </div>
-
-        <div class="rest">
-            <h5 class="rest-num" id="two">2</h5>
-            <img src="@Url.Content(top5RatedRestaurants[1].Logo.Path)" class="rest-img">
-            <div>
-                <a href="@Url.Action("Details", "Restaurants", new { id = top5RatedRestaurants[1].RestaurantID })" class="rest-link">View More</a>
-            </div>
-        </div>
-
-        <div class="rest">
-            <h5 class="rest-num" id="three">3</h5>
-            <img src="@Url.Content(top5RatedRestaurants[2].Logo.Path)" class="rest-img">
-            <div>
-                <a href="@Url.Action("Details", "Restaurants", new { id = top5RatedRestaurants[2].RestaurantID })" class="rest-link">View More</a>
-            </div>
-        </div>
-
-        <div class="rest">
-            <h5 class="rest-num">4</h5>
-            <img src="@Url.Content(top5RatedRestaurants[3].Logo.Path)" class="rest-img">
-            <div>
-                <a href="@Url.Action("Details", "Restaurants", new { id = top5RatedRestaurants[3].RestaurantID })" class="rest-link">View More</a>
-            </div>
-        </div>
-
-        <div class="rest">
-            <h5 class="rest-num">5</h5>
-            <img src="@Url.Content(top5RatedRestaurants[4].Logo.Path)" class="rest-img">
-            <div>
-                <a href="@Url.Action("Details", "Restaurants", new { id = top5RatedRestaurants[4].RestaurantID })" class="rest-link">View More</a>
-            </div>
-        </div>
-
+        }
     </div>
 
     <!--Top 5 Rated Restaurants end-->

@@ -30,12 +30,12 @@
         <nav class="my-navbar navbar fixed-top navbar-expand-lg navbar-dark">
             <div class="container-fluid">
                 <a class="navbar-brand" href="@Url.Action("Index", "Home")"><img width="100" src="~/images/logo.png"></a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main_nav">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main_nav" aria-controls="main_nav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse flex-row-reverse" id="main_nav">
                     <partial name="_LoginPartial" />
-                    <ul class="navbar-nav">
+                    <ul class="navbar-nav active">
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
                         </li>

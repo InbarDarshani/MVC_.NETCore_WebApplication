@@ -6,6 +6,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\**" />
+    <Compile Remove="NewFolder\**" />
+    <Content Remove="Migrations\**" />
+    <Content Remove="NewFolder\**" />
+    <EmbeddedResource Remove="Migrations\**" />
+    <EmbeddedResource Remove="NewFolder\**" />
+    <None Remove="Migrations\**" />
+    <None Remove="NewFolder\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="IKVM" Version="8.1.5717" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.11" />
@@ -35,11 +46,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Migrations\" />
-    <Folder Include="NewFolder\" />
   </ItemGroup>
 
 </Project>

@@ -10,8 +10,6 @@ namespace RateTheRest.Models
 {
     public class Chef
     {
-        //public Chef() { this.Restaurants = new HashSet<Restaurant>(); }     //For the Many to Many Relation
-
         public int ChefID { get; set; }
 
         [Required]
